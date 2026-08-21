@@ -1,108 +1,145 @@
-import React from "react";
-import { motion } from "framer-motion";
-import {
-
-  Mail,
-  ArrowRight,
-  CreditCard,
-  Wallet,
-} from "lucide-react";
-import { FaInstagram, FaTwitter, FaFacebookF } from "react-icons/fa";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
-// Same gold → pink signature line used on Login / ResetPassword / HeroBanner,
-// kept small here so it reads as a recurring mark rather than a repeat.
-function SignatureDraw() {
-  return (
-    <svg viewBox="0 0 190 60" width={120} height={38} fill="none">
-      <defs>
-        <linearGradient id="goldGradFooter" x1="0" y1="0" x2="190" y2="0">
-          <stop offset="0%" stopColor="#FBBF24" />
-          <stop offset="100%" stopColor="#EC4899" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M10 42 C 30 8, 45 8, 55 32 C 63 50, 75 18, 90 28 C 105 38, 100 50, 120 36 C 138 24, 150 45, 170 30"
-        stroke="url(#goldGradFooter)"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+import { Mail, MapPin } from "lucide-react";
+import { FaWhatsapp, FaFacebookF, FaInstagram } from "react-icons/fa";
 
 const shopLinks = [
-  { label: "New arrivals", to: "/" },
-  { label: "Best sellers", to: "/" },
-  { label: "Categories", to: "/" },
-  { label: "Gift cards", to: "/" },
+  { label: "All Jewelry", to: "/products" },
+  { label: "New Arrivals", to: "/products?sort=newest" },
+  { label: "Best Sellers", to: "/products?sort=rating-desc" },
+  { label: "Collections", to: "/products" },
+];
+
+const careLinks = [
+  { label: "Contact Us", to: "/contact" },
+  { label: "Shipping Information", to: "/shipping" },
+  { label: "Returns & Exchanges", to: "/returns" },
+  { label: "Jewelry Care", to: "/jewelry-care" },
+  { label: "FAQs", to: "/faq" },
 ];
 
 const companyLinks = [
-  { label: "About", to: "/about" },
-  { label: "Contact", to: "/contact" },
-  { label: "Careers", to: "/" },
-];
-
-const supportLinks = [
-  { label: "FAQs", to: "/" },
-  { label: "Shipping", to: "/" },
-  { label: "Returns", to: "/" },
-  { label: "Track order", to: "/" },
+  { label: "About Us", to: "/about" },
+  { label: "Privacy Policy", to: "/privacy" },
+  { label: "Terms & Conditions", to: "/terms" },
 ];
 
 export default function Footer() {
-  return (
-    <footer className="relative w-full overflow-hidden bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900 px-6 pt-16 pb-8 sm:px-10 lg:px-16">
-      {/* faint aurora, quieter than the hero so it reads as a base, not a repeat */}
-      <motion.div
-        className="absolute -top-24 left-[10%] h-[300px] w-[300px] rounded-full bg-indigo-500 opacity-20 blur-3xl"
-        animate={{ x: [0, 40, 0], y: [0, 20, 0] }}
-        transition={{ duration: 20, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -bottom-20 right-[8%] h-[260px] w-[260px] rounded-full bg-pink-500 opacity-15 blur-3xl"
-        animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
-        transition={{ duration: 24, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-      />
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
 
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 gap-12 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_0.8fr_1.1fr]">
-          {/* brand */}
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubscribed(true);
+      setEmail("");
+    }
+  };
+
+  return (
+    <footer style={{ background: "var(--mj-charcoal)", color: "white" }}>
+      {/* Main footer content */}
+      <div className="container-mj py-16">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr_1.2fr]">
+
+          {/* Brand column */}
           <div>
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-pink-500 text-sm font-bold text-white shadow-lg">
-                F
-              </div>
-              <span className="text-lg font-semibold tracking-wide text-white">Folio</span>
-            </div>
-            <p className="mt-4 max-w-xs text-sm text-white/50">
-              Goods worth keeping, sourced from makers we trust.
+            <Link to="/" className="flex items-center gap-2.5 mb-4" aria-label="Meri Jewelry">
+              <img
+                src="/meri-jewelry-logo.svg"
+                alt="Meri Jewelry"
+                className="h-12 w-auto object-contain brightness-0 invert"
+                onError={(e) => { e.target.style.display = "none"; }}
+              />
+            </Link>
+            <p
+              className="text-2xl font-medium mb-3"
+              style={{ fontFamily: "var(--font-display)", color: "var(--mj-gold-light)" }}
+            >
+              Meri Jewelry
             </p>
-            <SignatureDraw />
-            <div className="mt-4 flex items-center gap-3">
-              {[FaInstagram, FaTwitter, FaFacebookF ].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/60 transition-colors duration-150 hover:border-white/20 hover:text-white"
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                </a>
-              ))}
+            <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.55)", maxWidth: "240px" }}>
+              Premium handcrafted jewelry blending timeless elegance with South Asian tradition.
+            </p>
+
+            {/* Contact info */}
+            <div className="space-y-2.5 mb-6">
+              <a
+                href="https://wa.me/923001234567"
+                className="flex items-center gap-2.5 text-sm transition-colors hover:text-[var(--mj-gold-light)]"
+                style={{ color: "rgba(255,255,255,0.55)" }}
+              >
+                <FaWhatsapp className="w-4 h-4 shrink-0 text-green-400" />
+                +92 300 123 4567
+              </a>
+              <a
+                href="mailto:hello@merijewelry.com"
+                className="flex items-center gap-2.5 text-sm transition-colors hover:text-[var(--mj-gold-light)]"
+                style={{ color: "rgba(255,255,255,0.55)" }}
+              >
+                <Mail className="w-4 h-4 shrink-0" style={{ color: "var(--mj-gold)" }} />
+                hello@merijewelry.com
+              </a>
+              <p
+                className="flex items-start gap-2.5 text-sm"
+                style={{ color: "rgba(255,255,255,0.55)" }}
+              >
+                <MapPin className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "var(--mj-gold)" }} />
+                Lahore, Pakistan
+              </p>
+            </div>
+
+            {/* Social icons */}
+            <div className="flex items-center gap-3">
+              <a
+                href="https://instagram.com/merijewelry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-9 h-9 items-center justify-center rounded-full border transition-all hover:scale-105"
+                style={{ borderColor: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.6)" }}
+                aria-label="Instagram"
+              >
+                <FaInstagram className="w-4 h-4" />
+              </a>
+              <a
+                href="https://facebook.com/merijewelry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-9 h-9 items-center justify-center rounded-full border transition-all hover:scale-105"
+                style={{ borderColor: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.6)" }}
+                aria-label="Facebook"
+              >
+                <FaFacebookF className="w-4 h-4" />
+              </a>
+              <a
+                href="https://wa.me/923001234567"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-9 h-9 items-center justify-center rounded-full border transition-all hover:scale-105"
+                style={{ borderColor: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.6)" }}
+                aria-label="WhatsApp"
+              >
+                <FaWhatsapp className="w-4 h-4" />
+              </a>
             </div>
           </div>
 
-          {/* shop */}
+          {/* Shop column */}
           <div>
-            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-wider text-white/50">
+            <h4
+              className="mb-5 text-[11px] font-bold uppercase tracking-widest"
+              style={{ color: "var(--mj-gold)", letterSpacing: "0.18em" }}
+            >
               Shop
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-3">
               {shopLinks.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="text-white/60 transition-colors duration-150 hover:text-white">
+                  <Link
+                    to={l.to}
+                    className="text-sm transition-colors hover:text-[var(--mj-gold-light)]"
+                    style={{ color: "rgba(255,255,255,0.55)" }}
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -110,28 +147,45 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* company + support */}
+          {/* Customer Care column */}
           <div>
-            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-wider text-white/50">
+            <h4
+              className="mb-5 text-[11px] font-bold uppercase tracking-widest"
+              style={{ color: "var(--mj-gold)", letterSpacing: "0.18em" }}
+            >
+              Customer Care
+            </h4>
+            <ul className="space-y-3">
+              {careLinks.map((l) => (
+                <li key={l.label}>
+                  <Link
+                    to={l.to}
+                    className="text-sm transition-colors hover:text-[var(--mj-gold-light)]"
+                    style={{ color: "rgba(255,255,255,0.55)" }}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company column */}
+          <div>
+            <h4
+              className="mb-5 text-[11px] font-bold uppercase tracking-widest"
+              style={{ color: "var(--mj-gold)", letterSpacing: "0.18em" }}
+            >
               Company
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-3">
               {companyLinks.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="text-white/60 transition-colors duration-150 hover:text-white">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <h4 className="mb-4 mt-6 text-[11px] font-semibold uppercase tracking-wider text-white/50">
-              Support
-            </h4>
-            <ul className="space-y-2.5 text-sm">
-              {supportLinks.map((l) => (
-                <li key={l.label}>
-                  <Link to={l.to} className="text-white/60 transition-colors duration-150 hover:text-white">
+                  <Link
+                    to={l.to}
+                    className="text-sm transition-colors hover:text-[var(--mj-gold-light)]"
+                    style={{ color: "rgba(255,255,255,0.55)" }}
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -139,45 +193,68 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* newsletter */}
+          {/* Newsletter column */}
           <div>
-            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-wider text-white/50">
-              Stay in the loop
-            </h4>
-            <p className="mb-4 text-sm text-white/50">
-              One email a week. New drops, restocks, nothing else.
-            </p>
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="relative flex items-center"
+            <h4
+              className="mb-5 text-[11px] font-bold uppercase tracking-widest"
+              style={{ color: "var(--mj-gold)", letterSpacing: "0.18em" }}
             >
-              <Mail className="pointer-events-none absolute left-3.5 h-4 w-4 text-white/50" />
-              <input
-                type="email"
-                placeholder="you@studio.com"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-11 text-sm text-white placeholder-white/30 outline-none transition-all duration-150 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/40"
-              />
-              <button
-                type="submit"
-                aria-label="Subscribe"
-                className="absolute right-1.5 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 text-white"
+              Stay Connected
+            </h4>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.55)" }}>
+              Subscribe for new arrivals, exclusive offers, and styling inspiration.
+            </p>
+
+            {subscribed ? (
+              <div
+                className="rounded-lg px-4 py-3 text-sm font-medium"
+                style={{ background: "rgba(201,169,110,0.15)", color: "var(--mj-gold-light)", border: "1px solid rgba(201,169,110,0.3)" }}
               >
-                <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            </form>
+                ✦ Thank you for subscribing!
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="space-y-2.5">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email address"
+                  required
+                  className="w-full px-4 py-3 text-sm rounded-lg"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    color: "white",
+                    outline: "none",
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="w-full py-3 btn-gold rounded-lg text-[11px] font-bold"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* bottom bar */}
-        <div className="flex flex-col items-center justify-between gap-4 pt-6 text-xs text-white/40 sm:flex-row">
-          <span>© {new Date().getFullYear()} Folio. All rights reserved.</span>
+      {/* Divider */}
+      <div className="divider-gold opacity-20" />
+
+      {/* Bottom bar */}
+      <div className="container-mj py-5">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+          <span>© {new Date().getFullYear()} Meri Jewelry. All rights reserved.</span>
           <div className="flex items-center gap-5">
-            <a href="#" className="transition-colors duration-150 hover:text-white/70">Privacy</a>
-            <a href="#" className="transition-colors duration-150 hover:text-white/70">Terms</a>
-            <div className="flex items-center gap-2 text-white/30">
-              <CreditCard className="h-4 w-4" />
-              <Wallet className="h-4 w-4" />
-            </div>
+            <a href="http://www.merijewelry.com" className="hover:text-[var(--mj-gold-light)] transition-colors">
+              www.merijewelry.com
+            </a>
+            <span>·</span>
+            <Link to="/privacy" className="hover:text-[var(--mj-gold-light)] transition-colors">Privacy</Link>
+            <span>·</span>
+            <Link to="/terms" className="hover:text-[var(--mj-gold-light)] transition-colors">Terms</Link>
           </div>
         </div>
       </div>

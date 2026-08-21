@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { Trash2, Star, CheckCircle, XCircle, Search } from "lucide-react";
 import axiosInstance from "../api/axios";
 import { toast } from "react-toastify";
-import { getImageUrl } from "../../utils/imageUrl";
 
 export default function AdminReviews() {
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const [reviews, setReviews]   = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [page, setPage]         = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState("");
+  const [search, setSearch]     = useState("");
 
   const fetchReviews = async () => {
     try {
@@ -17,11 +16,8 @@ export default function AdminReviews() {
       const res = await axiosInstance.get(`/review/all?page=${page}&limit=10`);
       setReviews(res.data.data || []);
       setTotalPages(res.data.totalPages || 1);
-    } catch (err) {
-      toast.error("Failed to load reviews");
-    } finally {
-      setLoading(false);
-    }
+    } catch { toast.error("Failed to load reviews"); }
+    finally { setLoading(false); }
   };
 
   useEffect(() => { fetchReviews(); }, [page]);
@@ -30,25 +26,19 @@ export default function AdminReviews() {
     if (!confirm("Delete this review?")) return;
     try {
       await axiosInstance.delete(`/review/${id}`);
-      toast.success("Review deleted");
-      fetchReviews();
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Delete failed");
-    }
+      toast.success("Review deleted"); fetchReviews();
+    } catch (err) { toast.error(err.response?.data?.message || "Delete failed"); }
   };
 
-  const handleToggleApproval = async (review) => {
+  const handleToggleApproval = async (r) => {
     try {
-      await axiosInstance.put(`/review/${review._id}`, { isApproved: !review.isApproved });
-      toast.success(review.isApproved ? "Review unapproved" : "Review approved");
-      fetchReviews();
-    } catch (err) {
-      toast.error("Update failed");
-    }
+      await axiosInstance.put(`/review/${r._id}`, { isApproved: !r.isApproved });
+      toast.success(r.isApproved ? "Review unapproved" : "Review approved"); fetchReviews();
+    } catch { toast.error("Update failed"); }
   };
 
-  const filteredReviews = search
-    ? reviews.filter((r) =>
+  const filtered = search
+    ? reviews.filter(r =>
         r.comment?.toLowerCase().includes(search.toLowerCase()) ||
         r.userId?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
         r.productId?.productName?.toLowerCase().includes(search.toLowerCase())
@@ -58,98 +48,89 @@ export default function AdminReviews() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-white" style={{ fontFamily: "Fraunces, serif" }}>Reviews</h1>
-        <p className="mt-1 text-sm text-white/50">Manage product reviews and approvals.</p>
+        <p className="subheading mb-1">Moderation</p>
+        <h1 className="heading-display text-3xl">Reviews</h1>
       </div>
 
-      {/* Search */}
       <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-        <input
-          type="text"
-          placeholder="Search reviews..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-white/30 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/40"
-        />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none"
+          style={{ color: "var(--mj-text-light)" }} />
+        <input type="text" placeholder="Search reviews…" value={search}
+          onChange={e => setSearch(e.target.value)} className="input-mj pl-10" />
       </div>
 
       {loading ? (
-        <div className="flex h-40 items-center justify-center text-white/50">Loading...</div>
+        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="skeleton rounded-xl h-24" />)}</div>
       ) : (
         <div className="space-y-3">
-          {filteredReviews.map((r) => (
-            <div
-              key={r._id}
-              className="rounded-2xl border border-white/10 bg-white/[0.05] p-5 backdrop-blur-xl"
-            >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-white">
+          {filtered.map(r => (
+            <div key={r._id} className="rounded-xl bg-white p-5"
+              style={{ border: "1px solid var(--mj-border)" }}>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <span className="text-sm font-semibold" style={{ color: "var(--mj-charcoal)" }}>
                       {r.userId?.firstName} {r.userId?.lastName}
                     </span>
+                    {/* Stars */}
                     <div className="flex items-center gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-3 w-3 ${i < r.rating ? "fill-amber-400 text-amber-400" : "text-white/20"}`}
-                        />
+                      {[1,2,3,4,5].map(i => (
+                        <Star key={i} className="h-3 w-3"
+                          style={{ fill: i <= r.rating ? "var(--mj-gold)" : "transparent",
+                                   color: i <= r.rating ? "var(--mj-gold)" : "var(--mj-border)" }} />
                       ))}
                     </div>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                      r.isApproved ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"
-                    }`}>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
+                      style={r.isApproved
+                        ? { background: "#D1FAE5", color: "#065F46" }
+                        : { background: "#FEF3C7", color: "#92400E" }}>
                       {r.isApproved ? "Approved" : "Pending"}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-white/40">
-                    on <span className="text-white/60">{r.productId?.productName || "Deleted Product"}</span>
+                  <p className="text-[11px] mb-2" style={{ color: "var(--mj-text-muted)" }}>
+                    On <span style={{ color: "var(--mj-warm-brown)" }}>
+                      {r.productId?.productName || "Deleted Product"}
+                    </span>
                     {" · "}{new Date(r.createdAt).toLocaleDateString()}
                   </p>
-                  <p className="mt-2 text-sm text-white/70">{r.comment}</p>
+                  <p className="text-sm" style={{ color: "var(--mj-charcoal)" }}>{r.comment}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleToggleApproval(r)}
-                    className={`rounded-lg p-1.5 transition-colors hover:bg-white/10 ${
-                      r.isApproved ? "text-amber-400" : "text-emerald-400"
-                    }`}
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button onClick={() => handleToggleApproval(r)}
                     title={r.isApproved ? "Unapprove" : "Approve"}
-                  >
-                    {r.isApproved ? <XCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+                    style={r.isApproved
+                      ? { background: "#FEF3C7", border: "1px solid #FCD34D" }
+                      : { background: "#D1FAE5", border: "1px solid #6EE7B7" }}>
+                    {r.isApproved
+                      ? <XCircle className="h-4 w-4" style={{ color: "#D97706" }} />
+                      : <CheckCircle className="h-4 w-4" style={{ color: "#059669" }} />}
                   </button>
-                  <button
-                    onClick={() => handleDelete(r._id)}
-                    className="rounded-lg p-1.5 text-pink-400 transition-colors hover:bg-white/10"
-                    title="Delete"
-                  >
-                    <Trash2 className="h-4 w-4" />
+                  <button onClick={() => handleDelete(r._id)} title="Delete"
+                    className="w-8 h-8 flex items-center justify-center rounded-lg"
+                    style={{ background: "var(--mj-blush)", border: "1px solid var(--mj-blush-dark)" }}>
+                    <Trash2 className="h-4 w-4" style={{ color: "var(--mj-rose)" }} />
                   </button>
                 </div>
               </div>
             </div>
           ))}
-          {filteredReviews.length === 0 && (
-            <p className="py-8 text-center text-sm text-white/40">No reviews found</p>
+          {filtered.length === 0 && (
+            <p className="py-10 text-center text-sm" style={{ color: "var(--mj-text-muted)" }}>No reviews found</p>
           )}
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setPage(i + 1)}
-              className={`h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
-                page === i + 1
-                  ? "bg-gradient-to-r from-indigo-500 to-pink-500 text-white"
-                  : "border border-white/10 bg-white/5 text-white/50 hover:bg-white/10"
-              }`}
-            >
-              {i + 1}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
+            <button key={n} onClick={() => setPage(n)}
+              className="w-8 h-8 rounded-lg text-xs font-bold transition-colors"
+              style={n === page
+                ? { background: "var(--mj-charcoal)", color: "white" }
+                : { background: "white", border: "1px solid var(--mj-border)", color: "var(--mj-warm-brown)" }}>
+              {n}
             </button>
           ))}
         </div>

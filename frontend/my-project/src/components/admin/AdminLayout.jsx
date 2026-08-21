@@ -3,50 +3,39 @@ import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import {
-  LayoutDashboard,
-  BarChart3,
-  Package,
-  Users,
-  Tag,
-  MessageSquare,
-  Settings,
-  Menu,
-  X,
-  ChevronRight,
-  LogOut,
-  Shield,
-  ArrowLeft,
+  LayoutDashboard, BarChart3, Package, Users, Tag,
+  MessageSquare, Settings, Menu, X, ChevronRight,
+  LogOut, Shield, ArrowLeft, ShoppingBag,
 } from "lucide-react";
+import { getImageUrl } from "../../utils/imageUrl";
 
 const sidebarItems = [
-  { label: "Dashboard", to: "/admin", icon: LayoutDashboard },
-  { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
-  { label: "Products", to: "/admin/products", icon: Package },
-  { label: "Users", to: "/admin/users", icon: Users },
+  { label: "Dashboard",  to: "/admin",            icon: LayoutDashboard },
+  { label: "Analytics",  to: "/admin/analytics",  icon: BarChart3 },
+  { label: "Orders",     to: "/admin/orders",     icon: ShoppingBag },
+  { label: "Products",   to: "/admin/products",   icon: Package },
+  { label: "Users",      to: "/admin/users",      icon: Users },
   { label: "Categories", to: "/admin/categories", icon: Tag },
-  { label: "Reviews", to: "/admin/reviews", icon: MessageSquare },
-  { label: "Settings", to: "/admin/settings", icon: Settings },
+  { label: "Reviews",    to: "/admin/reviews",    icon: MessageSquare },
+  { label: "Settings",   to: "/admin/settings",   icon: Settings },
 ];
 
 function Breadcrumbs() {
   const location = useLocation();
   const parts = location.pathname.split("/").filter(Boolean);
-
-  const crumbs = parts.map((part, i) => {
-    const label = part.charAt(0).toUpperCase() + part.slice(1);
-    const path = "/" + parts.slice(0, i + 1).join("/");
-    return { label, path };
-  });
-
+  const crumbs = parts.map((part, i) => ({
+    label: part.charAt(0).toUpperCase() + part.slice(1),
+    path: "/" + parts.slice(0, i + 1).join("/"),
+  }));
   return (
-    <nav className="flex items-center gap-1 text-sm text-white/40">
-      <NavLink to="/admin" className="hover:text-white/70 transition-colors">
+    <nav className="flex items-center gap-1 text-xs" style={{ color: "var(--mj-text-light)" }}>
+      <NavLink to="/admin" className="hover:text-[var(--mj-gold-dark)] transition-colors font-medium">
         Admin
       </NavLink>
       {crumbs.slice(1).map(({ label, path }) => (
         <React.Fragment key={path}>
           <ChevronRight className="h-3 w-3" />
-          <NavLink to={path} className="hover:text-white/70 transition-colors">
+          <NavLink to={path} className="hover:text-[var(--mj-gold-dark)] transition-colors capitalize">
             {label}
           </NavLink>
         </React.Fragment>
@@ -55,11 +44,12 @@ function Breadcrumbs() {
   );
 }
 
-export default function AdminLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+function SidebarContent({ onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const avatarUrl = getImageUrl(user?.avatar);
+  const initial = (user?.firstName || "A").charAt(0).toUpperCase();
 
   const handleLogout = async () => {
     await logout();
@@ -67,159 +57,153 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900">
-      {/* Sidebar - Desktop */}
-      <aside className="hidden w-64 flex-col border-r border-white/10 bg-black/20 backdrop-blur-xl lg:flex">
-        {/* Logo */}
-        <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-pink-500 text-sm font-bold text-white shadow-lg">
-      E
+    <div className="flex h-full flex-col" style={{ background: "var(--mj-ivory)" }}>
+
+      {/* Logo */}
+      <div className="flex items-center justify-between px-5 py-5"
+        style={{ borderBottom: "1px solid var(--mj-border)" }}>
+        <div className="flex items-center gap-3">
+          <img src="/meri-jewelry-logo.svg" alt="Meri Jewelry"
+            className="h-9 w-auto object-contain"
+            onError={e => { e.target.style.display = "none"; }} />
+          <div>
+            <p className="text-sm font-semibold" style={{ fontFamily: "var(--font-display)", color: "var(--mj-charcoal)" }}>
+              Meri Jewelry
+            </p>
+            <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--mj-gold)" }}>
+              Admin
+            </p>
           </div>
-          <span className="text-lg font-semibold text-white" style={{ fontFamily: "Fraunces, serif" }}>
-            E-commerce Store
-          </span>
         </div>
-
-        {/* Nav links */}
-        <nav className="flex-1 space-y-1 px-3 py-4">
-          {sidebarItems.map(({ label, to, icon: Icon }) => {
-            const isActive =
-              to === "/admin"
-                ? location.pathname === "/admin"
-                : location.pathname.startsWith(to);
-            return (
-              <NavLink
-                key={to}
-                to={to}
-                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
-                  isActive
-                    ? "bg-gradient-to-r from-indigo-500/20 to-pink-500/20 text-white"
-                    : "text-white/50 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                <Icon className={`h-4 w-4 ${isActive ? "text-amber-400" : ""}`} />
-                {label}
-              </NavLink>
-            );
-          })}
-        </nav>
-
-        {/* User + Back */}
-        <div className="border-t border-white/10 px-4 py-4">
-          <NavLink
-            to="/"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/40 transition-colors hover:bg-white/5 hover:text-white/70"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Store
-          </NavLink>
-          <button
-            onClick={handleLogout}
-            className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-pink-300 transition-colors hover:bg-white/5 hover:text-pink-200"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
+        {onClose && (
+          <button onClick={onClose} style={{ color: "var(--mj-text-muted)" }}>
+            <X className="h-5 w-5" />
           </button>
+        )}
+      </div>
+
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        {sidebarItems.map(({ label, to, icon: Icon }) => {
+          const isActive = to === "/admin"
+            ? location.pathname === "/admin"
+            : location.pathname.startsWith(to);
+          return (
+            <NavLink key={to} to={to} onClick={onClose}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150"
+              style={isActive
+                ? { background: "var(--mj-cream)", color: "var(--mj-gold-dark)", border: "1px solid var(--mj-gold-light)" }
+                : { color: "var(--mj-text-muted)", border: "1px solid transparent" }}>
+              <Icon className="h-4 w-4 shrink-0"
+                style={{ color: isActive ? "var(--mj-gold)" : "var(--mj-text-light)" }} />
+              {label}
+            </NavLink>
+          );
+        })}
+      </nav>
+
+      {/* Bottom */}
+      <div className="px-4 py-4 space-y-1" style={{ borderTop: "1px solid var(--mj-border)" }}>
+        {/* User info */}
+        <div className="flex items-center gap-3 px-3 py-2.5 mb-1">
+          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0"
+            style={{ border: "2px solid var(--mj-gold)", background: "var(--mj-blush)" }}>
+            {avatarUrl
+              ? <img src={avatarUrl} alt={user?.firstName} className="w-full h-full object-cover" />
+              : <div className="w-full h-full flex items-center justify-center text-xs font-bold"
+                  style={{ color: "var(--mj-gold-dark)" }}>{initial}</div>}
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold truncate" style={{ color: "var(--mj-charcoal)" }}>
+              {user?.firstName} {user?.lastName}
+            </p>
+            <p className="text-[10px] truncate" style={{ color: "var(--mj-text-light)" }}>
+              {user?.email}
+            </p>
+          </div>
         </div>
+
+        <NavLink to="/" onClick={onClose}
+          className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors"
+          style={{ color: "var(--mj-text-muted)" }}
+          onMouseEnter={e => e.currentTarget.style.color = "var(--mj-charcoal)"}
+          onMouseLeave={e => e.currentTarget.style.color = "var(--mj-text-muted)"}>
+          <ArrowLeft className="h-4 w-4" />
+          Back to Store
+        </NavLink>
+
+        <button onClick={handleLogout}
+          className="flex w-full items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors"
+          style={{ color: "var(--mj-rose)" }}>
+          <LogOut className="h-4 w-4" />
+          Sign Out
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function AdminLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user } = useAuth();
+  const avatarUrl = getImageUrl(user?.avatar);
+  const initial = (user?.firstName || "A").charAt(0).toUpperCase();
+
+  return (
+    <div className="flex h-screen w-full overflow-hidden" style={{ background: "var(--mj-ivory)" }}>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex flex-col w-60 shrink-0"
+        style={{ borderRight: "1px solid var(--mj-border)", background: "var(--mj-ivory)" }}>
+        <SidebarContent />
       </aside>
 
       {/* Mobile sidebar overlay */}
       <AnimatePresence>
         {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex lg:hidden"
-          >
-            <div className="absolute inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
-            <motion.aside
-              initial={{ x: -280 }}
-              animate={{ x: 0 }}
-              exit={{ x: -280 }}
-              transition={{ type: "spring", damping: 25 }}
-              className="relative flex w-64 flex-col bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900"
-            >
-              <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
-                <span className="text-lg font-semibold text-white" style={{ fontFamily: "Fraunces, serif" }}>
-                  Folio Admin
-                </span>
-                <button onClick={() => setSidebarOpen(false)} className="text-white/60 hover:text-white">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <nav className="flex-1 space-y-1 px-3 py-4">
-                {sidebarItems.map(({ label, to, icon: Icon }) => {
-                  const isActive =
-                    to === "/admin"
-                      ? location.pathname === "/admin"
-                      : location.pathname.startsWith(to);
-                  return (
-                    <NavLink
-                      key={to}
-                      to={to}
-                      onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
-                        isActive
-                          ? "bg-gradient-to-r from-indigo-500/20 to-pink-500/20 text-white"
-                          : "text-white/50 hover:bg-white/5 hover:text-white"
-                      }`}
-                    >
-                      <Icon className={`h-4 w-4 ${isActive ? "text-amber-400" : ""}`} />
-                      {label}
-                    </NavLink>
-                  );
-                })}
-              </nav>
-
-              <div className="border-t border-white/10 px-4 py-4">
-                <NavLink
-                  to="/"
-                  onClick={() => setSidebarOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/40 transition-colors hover:bg-white/5 hover:text-white/70"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Store
-                </NavLink>
-                <button
-                  onClick={handleLogout}
-                  className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-pink-300 transition-colors hover:bg-white/5 hover:text-pink-200"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Logout
-                </button>
-              </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex lg:hidden">
+            <div className="absolute inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} />
+            <motion.aside initial={{ x: -260 }} animate={{ x: 0 }} exit={{ x: -260 }}
+              transition={{ type: "spring", damping: 28, stiffness: 260 }}
+              className="relative w-60 flex flex-col shadow-2xl">
+              <SidebarContent onClose={() => setSidebarOpen(false)} />
             </motion.aside>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Main content */}
+      {/* Main */}
       <div className="flex flex-1 flex-col overflow-hidden">
+
         {/* Top bar */}
-        <header className="flex h-14 items-center justify-between border-b border-white/10 bg-black/10 px-4 backdrop-blur-xl sm:px-6">
+        <header className="flex h-14 items-center justify-between px-4 sm:px-6 shrink-0"
+          style={{ background: "white", borderBottom: "1px solid var(--mj-border)" }}>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white lg:hidden"
-            >
-              <Menu className="h-5 w-5" />
+            <button onClick={() => setSidebarOpen(true)}
+              className="lg:hidden flex w-9 h-9 items-center justify-center rounded-lg transition-colors"
+              style={{ background: "var(--mj-cream)", border: "1px solid var(--mj-border)", color: "var(--mj-warm-brown)" }}>
+              <Menu className="h-4 w-4" />
             </button>
             <Breadcrumbs />
           </div>
+
           <div className="flex items-center gap-3">
-            <span className="hidden text-xs text-white/40 sm:block">
+            <span className="hidden sm:block text-xs" style={{ color: "var(--mj-text-muted)" }}>
               {user?.firstName} {user?.lastName}
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-pink-500 text-xs font-semibold text-white">
-              {(user?.firstName || "A").charAt(0).toUpperCase()}
+            <div className="w-8 h-8 rounded-full overflow-hidden shrink-0"
+              style={{ border: "2px solid var(--mj-gold)", background: "var(--mj-blush)" }}>
+              {avatarUrl
+                ? <img src={avatarUrl} alt={user?.firstName} className="w-full h-full object-cover" />
+                : <div className="w-full h-full flex items-center justify-center text-xs font-bold"
+                    style={{ color: "var(--mj-gold-dark)" }}>{initial}</div>}
             </div>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6" style={{ background: "var(--mj-ivory)" }}>
           <Outlet />
         </main>
       </div>

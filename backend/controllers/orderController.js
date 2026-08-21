@@ -52,8 +52,8 @@ const placeOrder = async (req, res) => {
     });
   }
 
-  // Calculate shipping (free over $50)
-  const shippingCost = subtotal > 50 ? 0 : 6;
+  // Calculate shipping (free over Rs. 2500 PKR, otherwise Rs. 200)
+  const shippingCost = subtotal > 2500 ? 0 : 200;
   const totalAmount = subtotal + shippingCost;
 
   // Create order

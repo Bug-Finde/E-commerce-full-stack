@@ -10,186 +10,194 @@ import { getImageUrl } from "../utils/imageUrl";
 export default function Cart() {
   const { cart, removeFromCart, updateQty, cartTotal, clearCart } = useContext(AppContext);
 
-  const shipping = cartTotal > 50 || cartTotal === 0 ? 0 : 6;
+  const FREE_SHIPPING_THRESHOLD = 2500;
+  const SHIPPING_FEE = 200;
+  const shipping = cartTotal >= FREE_SHIPPING_THRESHOLD || cartTotal === 0 ? 0 : SHIPPING_FEE;
   const total = cartTotal + shipping;
+  const remaining = FREE_SHIPPING_THRESHOLD - cartTotal;
 
   return (
     <>
       <Navbar />
-      <section className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900 px-6 py-14 sm:px-10 lg:px-16">
-        <div className="mx-auto max-w-5xl">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/[0.07] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-white/60 backdrop-blur-2xl">
-                Your bag
-              </span>
-              <h1
-                className="mt-3 text-3xl font-semibold text-white sm:text-4xl"
-                style={{ fontFamily: "Fraunces, serif" }}
-              >
-                Shopping Cart
-              </h1>
-            </div>
+      <div style={{ background: "var(--mj-ivory)", minHeight: "100vh" }}>
 
-            <Link
-              to="/products"
-              className="hidden items-center gap-2 text-xs font-semibold text-white/60 hover:text-white sm:flex"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Continue shopping
-            </Link>
-          </div>
+        {/* Header */}
+        <div style={{ background: "var(--mj-cream)", borderBottom: "1px solid var(--mj-border)" }}
+          className="py-12 px-6 text-center">
+          <p className="subheading mb-2">Your Selection</p>
+          <h1 className="heading-display text-4xl sm:text-5xl">Shopping Cart</h1>
+        </div>
 
+        <div className="container-mj py-12">
           {cart.length === 0 ? (
-            <div className="mt-16 flex flex-col items-center gap-4 rounded-3xl border border-white/10 bg-white/[0.07] p-14 text-center backdrop-blur-2xl">
-              <ShoppingBag className="h-10 w-10 text-white/25" strokeWidth={1.25} />
-              <p className="text-sm text-white/50">Your cart is empty.</p>
-              <Link
-                to="/products"
-                className="mt-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/20 hover:shadow-pink-500/40"
-              >
-                Browse products
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col items-center gap-5 py-20 text-center">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center"
+                style={{ background: "var(--mj-blush)" }}>
+                <ShoppingBag className="w-8 h-8" style={{ color: "var(--mj-rose)" }} strokeWidth={1.5} />
+              </div>
+              <h2 className="heading-display text-2xl">Your cart is empty</h2>
+              <p className="text-sm" style={{ color: "var(--mj-text-muted)", maxWidth: 280 }}>
+                Discover our beautiful jewelry collection and add your favourites.
+              </p>
+              <Link to="/products" className="mt-2 px-8 py-3 btn-gold rounded-lg text-xs">
+                Shop Now
               </Link>
-            </div>
+            </motion.div>
           ) : (
-            <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
-              <div className="flex flex-col gap-4">
-                <AnimatePresence>
-                  {cart.map((item) => {
-                    const imgSrc = getImageUrl(item.image);
-                    return (
-                      <motion.div
-                        key={`${item.productId}-${item.color}-${item.size}`}
-                        layout
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="flex gap-4 rounded-3xl border border-white/10 bg-white/[0.07] p-4 shadow-xl backdrop-blur-2xl sm:p-5"
-                      >
-                        <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/30 via-violet-500/20 to-pink-500/30">
-                          {imgSrc ? (
-                            <img src={imgSrc} alt={item.name} className="h-full w-full object-cover" />
-                          ) : (
-                            <ShoppingBag className="h-8 w-8 text-white/60" strokeWidth={1.25} />
-                          )}
-                        </div>
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_380px]">
 
-                        <div className="flex flex-1 flex-col justify-between">
-                          <div className="flex items-start justify-between gap-3">
-                            <div>
-                              <h3
-                                className="text-sm font-semibold text-white sm:text-base"
-                                style={{ fontFamily: "Fraunces, serif" }}
-                              >
-                                {item.name}
-                              </h3>
-                              <p className="mt-0.5 text-[11px] text-white/40">
-                                {item.color} Â· {item.size}
-                              </p>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => removeFromCart(item.productId, item.color, item.size)}
-                              className="flex h-8 w-8 items-center justify-center rounded-full text-white/40 transition-colors duration-150 hover:bg-white/10 hover:text-pink-300"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
+              {/* Cart items */}
+              <div>
+                {/* Free shipping progress */}
+                {cartTotal < FREE_SHIPPING_THRESHOLD && (
+                  <div className="mb-6 p-4 rounded-xl" style={{ background: "var(--mj-cream)", border: "1px solid var(--mj-border)" }}>
+                    <p className="text-xs font-semibold mb-2" style={{ color: "var(--mj-warm-brown)" }}>
+                      Add Rs. {Number(remaining).toLocaleString("en-PK")} more for free delivery
+                    </p>
+                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "var(--mj-border)" }}>
+                      <div className="h-full rounded-full transition-all duration-500"
+                        style={{ width: `${Math.min((cartTotal / FREE_SHIPPING_THRESHOLD) * 100, 100)}%`,
+                                 background: "var(--mj-gold)" }} />
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-col gap-4">
+                  <AnimatePresence>
+                    {cart.map((item) => {
+                      const imgSrc = getImageUrl(item.image);
+                      return (
+                        <motion.div key={`${item.productId}-${item.color}-${item.size}`}
+                          layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }}
+                          className="flex gap-4 p-4 rounded-xl bg-white sm:p-5"
+                          style={{ border: "1px solid var(--mj-border)" }}>
+
+                          {/* Image */}
+                          <div className="w-24 h-24 rounded-lg overflow-hidden shrink-0"
+                            style={{ background: "var(--mj-cream)", border: "1px solid var(--mj-border-light)" }}>
+                            {imgSrc
+                              ? <img src={imgSrc} alt={item.name} className="w-full h-full object-cover" />
+                              : <div className="w-full h-full flex items-center justify-center">
+                                  <ShoppingBag className="w-8 h-8" style={{ color: "var(--mj-text-light)" }} strokeWidth={1} />
+                                </div>}
                           </div>
 
-                          <div className="mt-3 flex items-center justify-between">
-                            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  updateQty(item.productId, item.color, item.size, item.qty - 1)
-                                }
-                                className="flex h-6 w-6 items-center justify-center text-white/60 hover:text-white"
-                              >
-                                <Minus className="h-3.5 w-3.5" />
+                          {/* Details */}
+                          <div className="flex flex-1 flex-col justify-between min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <h3 className="text-sm font-medium truncate"
+                                  style={{ fontFamily: "var(--font-display)", color: "var(--mj-charcoal)", fontSize: "1rem" }}>
+                                  {item.name}
+                                </h3>
+                                <p className="text-[11px] mt-0.5" style={{ color: "var(--mj-text-light)" }}>
+                                  {item.color} · {item.size}
+                                </p>
+                              </div>
+                              <button type="button"
+                                onClick={() => removeFromCart(item.productId, item.color, item.size)}
+                                className="w-8 h-8 flex items-center justify-center rounded-full shrink-0 transition-colors hover:bg-[var(--mj-blush)]"
+                                aria-label="Remove item">
+                                <Trash2 className="w-3.5 h-3.5" style={{ color: "var(--mj-rose)" }} />
                               </button>
-                              <span className="w-4 text-center text-sm font-semibold text-white">
-                                {item.qty}
+                            </div>
+
+                            <div className="flex items-center justify-between mt-3">
+                              {/* Qty stepper */}
+                              <div className="flex items-center rounded-lg overflow-hidden"
+                                style={{ border: "1px solid var(--mj-border)" }}>
+                                <button type="button"
+                                  onClick={() => updateQty(item.productId, item.color, item.size, item.qty - 1)}
+                                  className="w-8 h-8 flex items-center justify-center transition-colors hover:bg-[var(--mj-cream)]"
+                                  style={{ color: "var(--mj-warm-brown)" }}>
+                                  <Minus className="w-3 h-3" />
+                                </button>
+                                <span className="w-8 text-center text-xs font-bold"
+                                  style={{ color: "var(--mj-charcoal)" }}>{item.qty}</span>
+                                <button type="button"
+                                  onClick={() => updateQty(item.productId, item.color, item.size, item.qty + 1)}
+                                  className="w-8 h-8 flex items-center justify-center transition-colors hover:bg-[var(--mj-cream)]"
+                                  style={{ color: "var(--mj-warm-brown)" }}>
+                                  <Plus className="w-3 h-3" />
+                                </button>
+                              </div>
+
+                              <span className="text-sm font-bold" style={{ color: "var(--mj-charcoal)" }}>
+                                Rs. {Number(item.price * item.qty).toLocaleString("en-PK")}
                               </span>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  updateQty(item.productId, item.color, item.size, item.qty + 1)
-                                }
-                                className="flex h-6 w-6 items-center justify-center text-white/60 hover:text-white"
-                              >
-                                <Plus className="h-3.5 w-3.5" />
-                              </button>
                             </div>
-
-                            <span className="text-sm font-semibold text-white">
-                              ${(item.price * item.qty).toFixed(2)}
-                            </span>
                           </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={clearCart}
-                  className="mt-2 w-fit text-xs font-semibold text-pink-300 underline-offset-2 hover:underline"
-                >
-                  Clear cart
-                </button>
+                <div className="flex items-center justify-between mt-5">
+                  <Link to="/products"
+                    className="flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-[var(--mj-gold-dark)]"
+                    style={{ color: "var(--mj-text-muted)" }}>
+                    <ArrowLeft className="w-3.5 h-3.5" /> Continue Shopping
+                  </Link>
+                  <button type="button" onClick={clearCart}
+                    className="text-xs font-semibold underline-offset-2 hover:underline"
+                    style={{ color: "var(--mj-rose)" }}>
+                    Clear Cart
+                  </button>
+                </div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className="h-fit rounded-3xl border border-white/10 bg-white/[0.07] p-6 shadow-xl backdrop-blur-2xl"
-              >
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-white/50">
+              {/* Order summary */}
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="h-fit rounded-xl p-6 bg-white"
+                style={{ border: "1px solid var(--mj-border)" }}>
+
+                <h2 className="text-xs font-bold uppercase tracking-widest mb-5"
+                  style={{ color: "var(--mj-text-muted)", letterSpacing: "0.18em" }}>
                   Order Summary
                 </h2>
 
-                <div className="mt-4 flex flex-col gap-2.5 text-sm">
-                  <div className="flex justify-between text-white/60">
-                    <span>Subtotal</span>
-                    <span className="text-white">${cartTotal.toFixed(2)}</span>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span style={{ color: "var(--mj-text-muted)" }}>Subtotal ({cart.reduce((s, i) => s + i.qty, 0)} items)</span>
+                    <span className="font-medium" style={{ color: "var(--mj-charcoal)" }}>
+                      Rs. {Number(cartTotal).toLocaleString("en-PK")}
+                    </span>
                   </div>
-                  <div className="flex justify-between text-white/60">
-                    <span>Shipping</span>
-                    <span className="text-white">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                  <div className="flex justify-between">
+                    <span style={{ color: "var(--mj-text-muted)" }}>Shipping</span>
+                    <span className="font-medium" style={{ color: shipping === 0 ? "var(--mj-gold-dark)" : "var(--mj-charcoal)" }}>
+                      {shipping === 0 ? "Free" : `Rs. ${SHIPPING_FEE}`}
+                    </span>
                   </div>
                 </div>
 
-                <div className="mt-4 flex justify-between border-t border-white/10 pt-4 text-base font-semibold text-white">
+                <div className="divider-gold my-5" />
+
+                <div className="flex justify-between text-base font-bold mb-6"
+                  style={{ color: "var(--mj-charcoal)" }}>
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>Rs. {Number(total).toLocaleString("en-PK")}</span>
                 </div>
 
                 <Link to="/checkout">
-                  <motion.button
-                    type="button"
-                    whileHover={{ y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="mt-6 w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-pink-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-pink-500/20 hover:shadow-pink-500/40"
-                  >
-                    Checkout
+                  <motion.button type="button" whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
+                    className="w-full py-3.5 btn-gold rounded-lg text-xs font-bold">
+                    Proceed to Checkout
                   </motion.button>
                 </Link>
 
-                <Link
-                  to="/products"
-                  className="mt-3 flex items-center justify-center gap-2 text-xs font-semibold text-white/50 hover:text-white sm:hidden"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                  Continue shopping
-                </Link>
+                <p className="mt-4 text-center text-[11px]" style={{ color: "var(--mj-text-light)" }}>
+                  💵 Cash on Delivery available
+                </p>
               </motion.div>
             </div>
           )}
         </div>
-      </section>
+      </div>
       <Footer />
     </>
   );

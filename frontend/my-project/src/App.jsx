@@ -15,6 +15,16 @@ import Profile from "./pages/Profile";
 import ProductDetail from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Wishlist from "./pages/Wishlist";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Shipping from "./pages/Shipping";
+import Returns from "./pages/Returns";
+import JewelryCare from "./pages/JewelryCare";
+import FAQ from "./pages/FAQ";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import NotFound from "./pages/NotFound";
 
 /* Admin Pages */
 import AdminLayout from "./components/admin/AdminLayout";
@@ -26,6 +36,7 @@ import AdminUsers from "./pages/admin/Users";
 import AdminCategories from "./pages/admin/Categories";
 import AdminReviews from "./pages/admin/Reviews";
 import AdminSettings from "./pages/admin/Settings";
+import AdminOrders from "./pages/admin/Orders";
 import Unauthorized from "./pages/Unauthorized";
 
 function App() {
@@ -47,13 +58,24 @@ function App() {
         <Route path="/product-detail/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/returns" element={<Returns />} />
+        <Route path="/jewelry-care" element={<JewelryCare />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
 
-        {/* Admin Protected Routes */}
+        {/* Catch-all 404 */}
+        <Route path="*" element={<NotFound />} />
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="categories" element={<AdminCategories />} />
             <Route path="reviews" element={<AdminReviews />} />
