@@ -1,1 +1,312 @@
 @import "tailwindcss";
+
+/* ── Meri Jewelry Design System ───────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Brand Colors */
+    --mj-ivory:       #FAF8F5;
+    --mj-cream:       #F5F0E8;
+    --mj-blush:       #F2DADA;
+    --mj-blush-dark:  #E8C4C4;
+    --mj-rose:        #C8878A;
+    --mj-rose-dark:   #A8565A;
+    --mj-gold:        #C9A96E;
+    --mj-gold-light:  #E4C98A;
+    --mj-gold-dark:   #A07840;
+    --mj-charcoal:    #2C2420;
+    --mj-warm-brown:  #4A3728;
+    --mj-text-muted:  #7A6858;
+    --mj-text-light:  #A8927E;
+    --mj-border:      #E8DDD4;
+    --mj-border-light:#F0E8E0;
+    --mj-white:       #FFFFFF;
+
+    /* Typography */
+    --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+    --font-body:    'Lato', 'Helvetica Neue', sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--mj-ivory);
+    color: var(--mj-charcoal);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--mj-cream);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--mj-gold);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--mj-gold-dark);
+  }
+
+  /* Input focus ring reset */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+  }
+}
+
+/* ── Typography Utilities ─────────────────────────────────────────────── */
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  /* Gold gradient text */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, var(--mj-gold-light) 0%, var(--mj-gold) 50%, var(--mj-gold-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Rose gradient text */
+  .text-rose-gradient {
+    background: linear-gradient(135deg, var(--mj-rose) 0%, var(--mj-rose-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Gold button */
+  .btn-gold {
+    background: linear-gradient(135deg, var(--mj-gold-light) 0%, var(--mj-gold) 60%, var(--mj-gold-dark) 100%);
+    color: white;
+    font-family: var(--font-body);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    transition: all 0.25s ease;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-gold:hover {
+    background: linear-gradient(135deg, var(--mj-gold) 0%, var(--mj-gold-dark) 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(201, 169, 110, 0.35);
+  }
+
+  /* Outlined button */
+  .btn-outline {
+    background: transparent;
+    color: var(--mj-charcoal);
+    font-family: var(--font-body);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    border: 1px solid var(--mj-charcoal);
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+  .btn-outline:hover {
+    background: var(--mj-charcoal);
+    color: white;
+  }
+
+  /* Gold border */
+  .border-gold {
+    border-color: var(--mj-gold);
+  }
+
+  /* Divider line gold */
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--mj-gold), transparent);
+  }
+
+  /* Section container */
+  .container-mj {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  /* Card hover lift */
+  .card-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(44, 36, 32, 0.1);
+  }
+
+  /* Image overlay hover */
+  .img-zoom {
+    overflow: hidden;
+  }
+  .img-zoom img {
+    transition: transform 0.5s ease;
+  }
+  .img-zoom:hover img {
+    transform: scale(1.06);
+  }
+
+  /* Tag / badge pill */
+  .badge-gold {
+    background: linear-gradient(135deg, var(--mj-gold-light), var(--mj-gold));
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+  }
+
+  .badge-rose {
+    background: var(--mj-rose);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+  }
+
+  /* Luxury input */
+  .input-mj {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--mj-border);
+    color: var(--mj-charcoal);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .input-mj::placeholder {
+    color: var(--mj-text-light);
+  }
+  .input-mj:focus {
+    border-color: var(--mj-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.12);
+  }
+  .input-mj.error {
+    border-color: var(--mj-rose);
+  }
+
+  /* Prose heading */
+  .heading-display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--mj-charcoal);
+  }
+
+  /* Subtitle */
+  .subheading {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mj-gold);
+  }
+
+  /* Overlay gradient bottom */
+  .overlay-bottom {
+    background: linear-gradient(to top, rgba(44,36,32,0.6) 0%, transparent 50%);
+  }
+}
+
+/* ── Range Slider ─────────────────────────────────────────────────────── */
+.mj-range {
+  -webkit-appearance: none;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--mj-border);
+  outline: none;
+  width: 100%;
+}
+.mj-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--mj-gold-light), var(--mj-gold-dark));
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(201, 169, 110, 0.4);
+  border: 2px solid white;
+}
+.mj-range::-moz-range-thumb {
+  height: 18px;
+  width: 18px;
+  border: 2px solid white;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--mj-gold-light), var(--mj-gold-dark));
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(201, 169, 110, 0.4);
+}
+
+/* ── Toast Overrides ──────────────────────────────────────────────────── */
+.Toastify__toast {
+  font-family: var(--font-body) !important;
+  border-radius: 8px !important;
+}
+.Toastify__toast--success {
+  background: var(--mj-charcoal) !important;
+  color: white !important;
+}
+.Toastify__toast--error {
+  background: var(--mj-rose-dark) !important;
+  color: white !important;
+}
+
+/* ── Page Transitions ─────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* ── Shimmer Skeleton ─────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--mj-cream) 25%, var(--mj-border-light) 50%, var(--mj-cream) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Accordion / Details ──────────────────────────────────────────────── */
+details summary {
+  cursor: pointer;
+  list-style: none;
+}
+details summary::-webkit-details-marker {
+  display: none;
+}

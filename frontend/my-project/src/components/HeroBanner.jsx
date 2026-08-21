@@ -1,213 +1,129 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import {
-  ShoppingBag,
-  Sparkles,
-  ArrowRight,
-  Truck,
-  ShieldCheck,
-  RotateCcw,
-  Star,
-} from "lucide-react";
+import { ShoppingBag, ArrowRight, Truck, ShieldCheck, Package, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Same font loader used on Login / ResetPassword — Fraunces for display,
-// Inter for body. Safe to call again; it no-ops if the <link> already exists.
-function useFonts() {
-  useEffect(() => {
-    const id = "auth-fonts-vivid";
-    if (document.getElementById(id)) return;
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href =
-      "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap";
-    document.head.appendChild(link);
-  }, []);
-}
-
-// The same gold → pink "signature" line used on the auth pages.
-// Reusing it here ties the storefront back to the sign-in flow visually.
-function SignatureDraw({ width = 160, height = 52 }) {
-  return (
-    <svg viewBox="0 0 190 60" width={width} height={height} fill="none">
-      <defs>
-        <linearGradient id="goldGradHero" x1="0" y1="0" x2="190" y2="0">
-          <stop offset="0%" stopColor="#FBBF24" />
-          <stop offset="100%" stopColor="#EC4899" />
-        </linearGradient>
-      </defs>
-      <motion.path
-        d="M10 42 C 30 8, 45 8, 55 32 C 63 50, 75 18, 90 28 C 105 38, 100 50, 120 36 C 138 24, 150 45, 170 30"
-        stroke="url(#goldGradHero)"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ duration: 1.8, ease: "easeInOut", delay: 0.3 }}
-      />
-    </svg>
-  );
-}
-
-const features = [
-  { icon: Truck, label: "Free shipping over $50" },
-  { icon: ShieldCheck, label: "Secure checkout" },
-  { icon: RotateCcw, label: "Easy 30-day returns" },
+const trustItems = [
+  { icon: Truck,        label: "Nationwide Delivery" },
+  { icon: ShieldCheck,  label: "Secure Packaging" },
+  { icon: Package,      label: "Cash on Delivery" },
 ];
 
-export default function HeroBanner({ onShopNow, onBrowseCategories }) {
-  useFonts();
-
+export default function HeroBanner() {
   return (
-    <section className="relative flex min-h-[92vh] w-full items-center overflow-hidden bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900 px-6 py-16 sm:px-10 lg:px-16">
-      {/* aurora blobs — identical treatment to the auth pages */}
-      <motion.div
-        className="absolute -top-32 -left-24 h-[420px] w-[420px] rounded-full bg-indigo-500 opacity-50 blur-3xl"
-        animate={{ x: [0, 60, -20, 0], y: [0, 40, -30, 0] }}
-        transition={{ duration: 16, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -bottom-36 -right-24 h-[380px] w-[380px] rounded-full bg-pink-500 opacity-40 blur-3xl"
-        animate={{ x: [0, -50, 30, 0], y: [0, -30, 20, 0] }}
-        transition={{ duration: 18, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-10 left-[45%] h-[300px] w-[300px] rounded-full bg-amber-500 opacity-25 blur-3xl"
-        animate={{ x: [0, 40, -40, 0], y: [0, -20, 20, 0] }}
-        transition={{ duration: 22, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-      />
+    <section className="relative overflow-hidden" style={{ background: "var(--mj-cream)" }}>
 
-      {/* floating sparkles, same accent as auth pages */}
-      <motion.div
-        className="absolute left-[8%] top-[16%] hidden sm:block"
-        animate={{ y: [0, -14, 0], rotate: [0, 12, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Sparkles className="h-6 w-6 text-amber-400/70" />
-      </motion.div>
-      <motion.div
-        className="absolute bottom-[20%] right-[6%] hidden sm:block"
-        animate={{ y: [0, 14, 0], rotate: [0, -12, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      >
-        <Sparkles className="h-5 w-5 text-pink-400/60" />
-      </motion.div>
+      {/* Decorative blush circle */}
+      <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full pointer-events-none"
+        style={{ background: "var(--mj-blush)", opacity: 0.35 }} />
+      <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] rounded-full pointer-events-none"
+        style={{ background: "var(--mj-blush)", opacity: 0.25 }} />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
-        {/* left: copy */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.07] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-white/60 backdrop-blur-2xl">
-            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-            New arrivals, every week
-          </span>
+      <div className="container-mj relative z-10 py-20 lg:py-28">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
-          <h1
-            className="mt-5 text-4xl font-semibold leading-[1.08] text-white sm:text-5xl lg:text-6xl"
-            style={{ fontFamily: "Fraunces, serif" }}
-          >
-            Shop the pieces
-            <br />
-            worth keeping.
-          </h1>
+          {/* ── Left: Copy ── */}
+          <motion.div initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}>
 
-          <p className="mt-4 max-w-md text-sm text-white/50 sm:text-base">
-            Folio curates goods that outlast trends — sourced from makers we
-            trust, delivered to your door.
-          </p>
+            <p className="subheading mb-4">New Collection 2025</p>
 
-          <SignatureDraw />
+            <h1 className="heading-display mb-5"
+              style={{ fontSize: "clamp(2.6rem, 5vw, 4.2rem)", lineHeight: 1.05 }}>
+              Jewelry That<br />
+              <span className="text-gold-gradient">Tells Your Story</span>
+            </h1>
 
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <p className="text-base leading-relaxed mb-8"
+              style={{ color: "var(--mj-text-muted)", maxWidth: 440 }}>
+              Discover timeless elegance crafted for the modern South Asian woman.
+              From delicate everyday pieces to statement bridal jewellery.
+            </p>
 
+            <div className="flex flex-wrap items-center gap-3 mb-10">
+              <Link to="/products">
+                <motion.button whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-2 px-8 py-3.5 btn-gold rounded-lg">
+                  <ShoppingBag className="w-4 h-4" />
+                  Shop Now
+                  <ArrowRight className="w-4 h-4" />
+                </motion.button>
+              </Link>
+              <Link to="/about">
+                <motion.button whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-2 px-8 py-3.5 btn-outline rounded-lg">
+                  Our Story
+                </motion.button>
+              </Link>
+            </div>
 
-            <Link to={'/products'}>
-                <motion.button
-              type="button"
-              onClick={onShopNow}
-              whileHover={{ y: -1 }}
-              whileTap={{ scale: 0.98 }}
-              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/20 hover:shadow-pink-500/40"
-            >
-                
-              <ShoppingBag className="h-4 w-4" />
-              Shop now
-              <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" />
-            </motion.button>
-            </Link>
-        
+            {/* Trust strip */}
+            <div className="flex flex-wrap gap-x-6 gap-y-3">
+              {trustItems.map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-2">
+                  <Icon className="w-4 h-4 shrink-0" style={{ color: "var(--mj-gold)" }} />
+                  <span className="text-xs font-semibold" style={{ color: "var(--mj-text-muted)" }}>
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
 
-            <button
-              type="button"
-              onClick={onBrowseCategories}
-              className="rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white/80 backdrop-blur-2xl transition-colors duration-150 hover:border-white/20 hover:text-white"
-            >
-              Browse categories
-            </button>
-          </div>
+          {/* ── Right: Hero card ── */}
+          <motion.div initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
+            className="relative flex justify-center lg:justify-end">
 
-          {/* feature strip */}
-          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
-            {features.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-2 text-xs text-white/50">
-                <Icon className="h-4 w-4 text-white/40" />
-                {label}
+            {/* Main card */}
+            <div className="relative w-full max-w-sm">
+              <div className="rounded-2xl overflow-hidden shadow-xl"
+                style={{ border: "1px solid var(--mj-border)", background: "white" }}>
+
+                {/* Image area */}
+                <div className="aspect-[4/5] flex items-center justify-center relative"
+                  style={{ background: "var(--mj-blush)" }}>
+                  <img src="/meri-jewelry-logo.svg" alt="Meri Jewelry"
+                    className="w-48 h-48 object-contain"
+                    onError={e => { e.target.style.display = "none"; }} />
+                  <span className="absolute top-4 left-4 badge-rose">New</span>
+                </div>
+
+                {/* Card info */}
+                <div className="p-5">
+                  <p className="subheading mb-1.5">Featured Collection</p>
+                  <h3 className="heading-display text-xl mb-3">Bridal Jewelry Sets</h3>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-0.5">
+                      {[1,2,3,4,5].map(i => (
+                        <Star key={i} className="w-3 h-3"
+                          style={{ fill: "var(--mj-gold)", color: "var(--mj-gold)" }} />
+                      ))}
+                    </div>
+                    <Link to="/products"
+                      className="flex items-center gap-1.5 text-xs font-bold transition-colors"
+                      style={{ color: "var(--mj-gold-dark)" }}>
+                      View All <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
-        </motion.div>
 
-        {/* right: glass product spotlight card */}
-        <motion.div
-          initial={{ opacity: 0, y: 24, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-          className="relative mx-auto w-full max-w-sm"
-        >
-          <div className="rounded-3xl border border-white/10 bg-white/[0.07] p-6 shadow-2xl backdrop-blur-2xl">
-            <div className="flex items-center justify-between">
-              <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white/60">
-                Editor's pick
-              </span>
-              <div className="flex items-center gap-1 text-amber-400">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-3 w-3 fill-current" />
-                ))}
-              </div>
+              {/* Floating accent badge */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -bottom-5 -left-5 rounded-xl p-3.5 shadow-lg"
+                style={{ background: "white", border: "1px solid var(--mj-border)" }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest"
+                  style={{ color: "var(--mj-gold)" }}>Premium Quality</p>
+                <p className="text-xs font-medium mt-0.5" style={{ color: "var(--mj-charcoal)" }}>
+                  Handcrafted ✦
+                </p>
+              </motion.div>
             </div>
-
-            <div className="mt-5 flex h-44 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/30 via-violet-500/20 to-pink-500/30">
-              <ShoppingBag className="h-16 w-16 text-white/70" strokeWidth={1.25} />
-            </div>
-
-            <h3
-              className="mt-5 text-xl font-semibold text-white"
-              style={{ fontFamily: "Fraunces, serif" }}
-            >
-              Woven Tote — Ochre
-            </h3>
-            <p className="mt-1 text-sm text-white/50">Handloomed cotton, lined interior</p>
-
-            <div className="mt-4 flex items-center justify-between">
-              <span className="text-lg font-semibold text-white">$68.00</span>
-              <button
-                type="button"
-                className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-pink-500 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-pink-500/20"
-              >
-                <ShoppingBag className="h-3.5 w-3.5" />
-                Add to cart
-              </button>
-            </div>
-          </div>
-
-          {/* small floating accent card behind the main one */}
-          <div className="absolute -bottom-6 -left-6 -z-10 hidden h-full w-full rounded-3xl border border-white/10 bg-white/[0.04] sm:block" />
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

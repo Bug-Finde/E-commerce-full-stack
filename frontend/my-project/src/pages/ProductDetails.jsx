@@ -1,248 +1,126 @@
 ﻿import React, { useEffect, useState, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ShoppingBag,
-  Star,
-  Minus,
-  Plus,
-  Truck,
-  ShieldCheck,
-  RotateCcw,
-  Heart,
-  Share2,
-  ChevronLeft,
-  ChevronRight,
-  Check,
+  ShoppingBag, Star, Minus, Plus, Truck, ShieldCheck, RotateCcw,
+  Heart, Share2, ChevronLeft, ChevronRight, Check, Package,
 } from "lucide-react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axiosInstance from "./api/axios";
 import { AppContext } from "../context/Context";
+import { useWishlist } from "../context/WishlistContext";
 import { getImageUrl } from "../utils/imageUrl";
 
-function useFonts() {
-  useEffect(() => {
-    const id = "auth-fonts-vivid";
-    if (document.getElementById(id)) return;
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href =
-      "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap";
-    document.head.appendChild(link);
-  }, []);
-}
-
-const DEFAULT_PRODUCT = {
-  category: "Uncategorized",
-  rating: 4,
-  reviewCount: 0,
-  description: "No description available.",
-  highlights: [
-    "Quality materials",
-    "Expert craftsmanship",
-    "Sustainably sourced",
-    "Ships within 2-3 business days",
-  ],
-  colors: [
-    { name: "Default", swatch: "from-amber-400 to-amber-600" },
-  ],
-  sizes: ["Standard"],
-};
-
-const RELATED = [
-  { id: 2, name: "Market Basket Bag", price: 54, rating: 4 },
-  { id: 3, name: "Canvas Weekender", price: 96, rating: 5 },
-  { id: 4, name: "Quilted Crossbody", price: 62, rating: 4 },
-  { id: 5, name: "Leather Belt", price: 46, rating: 4 },
-];
-
 const features = [
-  { icon: Truck, label: "Free shipping over $50" },
-  { icon: ShieldCheck, label: "Secure checkout" },
-  { icon: RotateCcw, label: "Easy 30-day returns" },
+  { icon: Truck,       label: "Nationwide Delivery" },
+  { icon: ShieldCheck, label: "Secure & Carefully Packed" },
+  { icon: RotateCcw,   label: "Easy Returns" },
+  { icon: Package,     label: "Cash on Delivery" },
 ];
 
-function GalleryPanel({ product, activeIndex, setActiveIndex }) {
-  const imgSrc = getImageUrl(product?.productImg);
-  const panels = 4;
-
-  return (
-    <div>
-      <div className="relative flex h-[420px] items-center justify-center overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-500/30 via-violet-500/20 to-pink-500/30 sm:h-[480px]">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeIndex}
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.97 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-          >
-            {imgSrc ? (
-              <img
-                src={imgSrc}
-                alt={product.productName}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <ShoppingBag className="h-28 w-28 text-white/70" strokeWidth={1} />
-            )}
-          </motion.div>
-        </AnimatePresence>
-
-        <button
-          type="button"
-          onClick={() => setActiveIndex((i) => (i - 1 + panels) % panels)}
-          className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/70 backdrop-blur-xl transition-colors duration-150 hover:bg-white/20 hover:text-white"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveIndex((i) => (i + 1) % panels)}
-          className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/70 backdrop-blur-xl transition-colors duration-150 hover:bg-white/20 hover:text-white"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-
-        <span className="absolute left-4 top-4 rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white/60 backdrop-blur-xl">
-          {product?.category || DEFAULT_PRODUCT.category}
-        </span>
-      </div>
-
-      <div className="mt-4 grid grid-cols-4 gap-3">
-        {Array.from({ length: panels }).map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => setActiveIndex(i)}
-            className={
-              "flex h-20 items-center justify-center rounded-2xl border bg-gradient-to-br from-indigo-500/25 via-violet-500/15 to-pink-500/25 transition-colors duration-150 " +
-              (activeIndex === i ? "border-white/40" : "border-white/10 hover:border-white/25")
-            }
-          >
-            {imgSrc ? (
-              <img
-                src={imgSrc}
-                alt={product.productName}
-                className="h-full w-full rounded-2xl object-cover"
-              />
-            ) : (
-              <ShoppingBag className="h-6 w-6 text-white/50" strokeWidth={1.25} />
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RelatedCard({ product, index }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.35, ease: "easeOut", delay: index * 0.05 }}
-      className="group rounded-3xl border border-white/10 bg-white/[0.07] p-5 shadow-xl backdrop-blur-2xl transition-colors duration-200 hover:border-white/20"
-    >
-      <div className="flex h-32 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/30 via-violet-500/20 to-pink-500/30 transition-transform duration-300 group-hover:scale-[1.02]">
-        <ShoppingBag className="h-10 w-10 text-white/70" strokeWidth={1.25} />
-      </div>
-      <h4 className="mt-4 text-sm font-semibold text-white" style={{ fontFamily: "Fraunces, serif" }}>
-        {product.name}
-      </h4>
-      <div className="mt-1 flex items-center gap-1 text-amber-400">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} className={"h-2.5 w-2.5 " + (i < product.rating ? "fill-current" : "fill-transparent stroke-white/20")} />
-        ))}
-      </div>
-      <div className="mt-3 flex items-center justify-between">
-        <span className="text-sm font-semibold text-white">${product.price.toFixed(2)}</span>
-        <button
-          type="button"
-          className="rounded-lg bg-white/10 p-2 text-white/70 transition-colors duration-150 hover:bg-white/20 hover:text-white"
-        >
-          <ShoppingBag className="h-3.5 w-3.5" />
-        </button>
-      </div>
-    </motion.div>
-  );
-}
+const DEFAULT_HIGHLIGHTS = [
+  "Premium quality materials",
+  "Expert craftsmanship",
+  "Hypoallergenic finish",
+  "Ships within 2–3 business days",
+];
 
 export default function ProductDetail() {
-  useFonts();
-
   const { id } = useParams();
-
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [qty, setQty] = useState(1);
-  const [wishlisted, setWishlisted] = useState(false);
-  const [tab, setTab] = useState("description");
-  const [added, setAdded] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [color, setColor] = useState("Default");
-  const [size, setSize] = useState("Standard");
   const { addToCart } = useContext(AppContext);
+  const { toggleWishlist, isWishlisted } = useWishlist();
+
+  const [product, setProduct]       = useState(null);
+  const [related, setRelated]       = useState([]);
+  const [loading, setLoading]       = useState(true);
+  const [qty, setQty]               = useState(1);
+  const [tab, setTab]               = useState("description");
+  const [added, setAdded]           = useState(false);
+  const [activeImg, setActiveImg]   = useState(0);
+  const [copied, setCopied]         = useState(false);
+
+  const wishlisted = isWishlisted(product?._id);
 
   useEffect(() => {
-    const getProduct = async () => {
+    window.scrollTo(0, 0);
+    const load = async () => {
       try {
         setLoading(true);
         const res = await axiosInstance.get(`/product/detail-product/${id}`);
-        if (res.data.success) {
-          setProduct(res.data.data);
-        }
+        if (res.data.success) setProduct(res.data.data);
       } catch (err) {
         console.error("Failed to load product:", err);
       } finally {
         setLoading(false);
       }
     };
-
-    getProduct();
+    load();
   }, [id]);
 
-  const discountPct = product?.compareAt
-    ? Math.round((1 - product.productPrice / product.compareAt) * 100)
-    : 0;
+  useEffect(() => {
+    if (!product?.category) return;
+    axiosInstance.get("product/get-products", { params: { category: product.category, limit: 4 } })
+      .then(r => {
+        if (r.data.success) setRelated(r.data.data.filter(p => p._id !== id).slice(0, 4));
+      }).catch(() => {});
+  }, [product?.category, id]);
 
-  function handleAddToCart() {
+  const handleAddToCart = () => {
     if (!product) return;
-    addToCart(product, qty, { color, size });
+    addToCart(product, qty);
     setAdded(true);
-    setTimeout(() => setAdded(false), 1800);
-  }
+    setTimeout(() => setAdded(false), 2000);
+  };
 
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const displayPrice  = product?.salePrice || product?.productPrice || 0;
+  const originalPrice = product?.salePrice ? product?.productPrice : null;
+  const discountPct   = originalPrice ? Math.round((1 - displayPrice / originalPrice) * 100) : 0;
+  const imgSrc        = getImageUrl(product?.productImg);
+
+  /* ── Loading skeleton ── */
   if (loading) {
     return (
       <>
         <Navbar />
-        <section className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900 px-6 py-14 sm:px-10 lg:px-16">
-          <div className="mx-auto max-w-6xl">
-            <div className="flex h-96 items-center justify-center">
-              <div className="text-white/60">Loading...</div>
+        <div style={{ background: "var(--mj-ivory)", minHeight: "100vh" }}>
+          <div className="container-mj py-14">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div className="skeleton rounded-xl aspect-square" />
+              <div className="space-y-4 pt-4">
+                <div className="skeleton h-4 w-24 rounded" />
+                <div className="skeleton h-8 w-3/4 rounded" />
+                <div className="skeleton h-6 w-1/3 rounded" />
+                <div className="skeleton h-32 rounded" />
+              </div>
             </div>
           </div>
-        </section>
+        </div>
         <Footer />
       </>
     );
   }
 
+  /* ── Not found ── */
   if (!product) {
     return (
       <>
         <Navbar />
-        <section className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900 px-6 py-14 sm:px-10 lg:px-16">
-          <div className="mx-auto max-w-6xl">
-            <div className="flex h-96 items-center justify-center">
-              <div className="text-white/60">Product not found</div>
-            </div>
-          </div>
-        </section>
+        <div style={{ background: "var(--mj-ivory)", minHeight: "100vh" }}
+          className="flex flex-col items-center justify-center gap-5 py-20">
+          <ShoppingBag className="w-14 h-14" style={{ color: "var(--mj-text-light)" }} strokeWidth={1} />
+          <h2 className="heading-display text-2xl">Product not found</h2>
+          <Link to="/products" className="px-6 py-3 btn-gold rounded-lg text-xs">
+            Back to Shop
+          </Link>
+        </div>
         <Footer />
       </>
     );
@@ -251,272 +129,289 @@ export default function ProductDetail() {
   return (
     <>
       <Navbar />
-      <section className="min-h-screen w-full bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900 px-6 py-14 sm:px-10 lg:px-16">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-2 text-xs text-white/40">
-            <span className="hover:text-white/60">Shop</span>
-            <span>/</span>
-            <span className="hover:text-white/60">{product.category || DEFAULT_PRODUCT.category}</span>
-            <span>/</span>
-            <span className="text-white/60">{product.productName}</span>
-          </div>
+      <div style={{ background: "var(--mj-ivory)", minHeight: "100vh" }}>
+        <div className="container-mj py-10">
 
-          <div className="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_0.85fr]">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: "easeOut" }}>
-              <GalleryPanel
-                product={product}
-                activeIndex={activeIndex}
-                setActiveIndex={setActiveIndex}
-              />
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-xs mb-8" style={{ color: "var(--mj-text-light)" }}>
+            <Link to="/" className="hover:text-[var(--mj-gold-dark)] transition-colors">Home</Link>
+            <span>/</span>
+            <Link to="/products" className="hover:text-[var(--mj-gold-dark)] transition-colors">Shop</Link>
+            <span>/</span>
+            <span style={{ color: "var(--mj-charcoal)" }}>{product.productName}</span>
+          </nav>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16">
+
+            {/* ── Gallery ── */}
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }}>
+              {/* Main image */}
+              <div className="relative rounded-2xl overflow-hidden bg-[var(--mj-cream)] aspect-square"
+                style={{ border: "1px solid var(--mj-border)" }}>
+                <AnimatePresence mode="wait">
+                  <motion.div key={activeImg} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="w-full h-full">
+                    {imgSrc ? (
+                      <img src={imgSrc} alt={product.productName}
+                        className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ShoppingBag className="w-24 h-24" style={{ color: "var(--mj-text-light)" }} strokeWidth={1} />
+                      </div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+
+                {discountPct > 0 && (
+                  <span className="absolute top-4 left-4 badge-rose">-{discountPct}%</span>
+                )}
+
+                <button type="button" onClick={() => setActiveImg(i => Math.max(0, i - 1))}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-md transition-all hover:scale-105"
+                  style={{ border: "1px solid var(--mj-border)" }}>
+                  <ChevronLeft className="w-4 h-4" style={{ color: "var(--mj-warm-brown)" }} />
+                </button>
+                <button type="button" onClick={() => setActiveImg(i => i + 1)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-md transition-all hover:scale-105"
+                  style={{ border: "1px solid var(--mj-border)" }}>
+                  <ChevronRight className="w-4 h-4" style={{ color: "var(--mj-warm-brown)" }} />
+                </button>
+              </div>
+
+              {/* Thumbnails */}
+              <div className="grid grid-cols-4 gap-3 mt-3">
+                {[0, 1, 2, 3].map(i => (
+                  <button key={i} type="button" onClick={() => setActiveImg(i)}
+                    className="aspect-square rounded-lg overflow-hidden transition-all"
+                    style={{
+                      border: activeImg === i
+                        ? "2px solid var(--mj-gold)"
+                        : "1px solid var(--mj-border)",
+                      background: "var(--mj-cream)",
+                    }}>
+                    {imgSrc ? (
+                      <img src={imgSrc} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ShoppingBag className="w-5 h-5" style={{ color: "var(--mj-text-light)" }} strokeWidth={1} />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.07] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white/50 backdrop-blur-2xl">
-                    {product.category || DEFAULT_PRODUCT.category}
-                  </span>
-                  <h1
-                    className="mt-3 text-3xl font-semibold leading-tight text-white sm:text-4xl"
-                    style={{ fontFamily: "Fraunces, serif" }}
-                  >
-                    {product.productName}
-                  </h1>
-                </div>
+            {/* ── Product Info ── */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }} className="flex flex-col">
 
-                <div className="flex shrink-0 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setWishlisted((v) => !v)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-colors duration-150 hover:border-white/20 hover:text-white"
-                  >
-                    <Heart className={"h-4 w-4 " + (wishlisted ? "fill-pink-400 text-pink-400" : "")} />
+              {/* Category + actions */}
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <p className="subheading">{product.category || "Jewelry"}</p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button type="button" onClick={() => toggleWishlist(product)}
+                    className="w-9 h-9 flex items-center justify-center rounded-full transition-all hover:scale-110"
+                    style={{ background: wishlisted ? "var(--mj-blush)" : "var(--mj-cream)", border: "1px solid var(--mj-border)" }}
+                    aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}>
+                    <Heart className="w-4 h-4 transition-colors"
+                      style={{ color: wishlisted ? "var(--mj-rose)" : "var(--mj-text-muted)",
+                               fill: wishlisted ? "var(--mj-rose)" : "transparent" }} />
                   </button>
-                  <button
-                    type="button"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-colors duration-150 hover:border-white/20 hover:text-white"
-                  >
-                    <Share2 className="h-4 w-4" />
+                  <button type="button" onClick={handleShare}
+                    className="w-9 h-9 flex items-center justify-center rounded-full transition-all hover:scale-110"
+                    style={{ background: "var(--mj-cream)", border: "1px solid var(--mj-border)" }}
+                    aria-label="Share">
+                    {copied
+                      ? <Check className="w-4 h-4" style={{ color: "var(--mj-gold)" }} />
+                      : <Share2 className="w-4 h-4" style={{ color: "var(--mj-text-muted)" }} />}
                   </button>
                 </div>
               </div>
 
-              <div className="mt-3 flex items-center gap-2">
-                <div className="flex items-center gap-0.5 text-amber-400">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className={"h-3.5 w-3.5 " + (i < DEFAULT_PRODUCT.rating ? "fill-current" : "fill-transparent stroke-white/20")} />
+              {/* Name */}
+              <h1 className="heading-display text-3xl sm:text-4xl mb-3" style={{ lineHeight: 1.1 }}>
+                {product.productName}
+              </h1>
+
+              {/* Stars placeholder */}
+              <div className="flex items-center gap-2 mb-5">
+                <div className="flex gap-0.5">
+                  {[1,2,3,4,5].map(i => (
+                    <Star key={i} className="w-3.5 h-3.5"
+                      style={{ fill: "var(--mj-gold)", color: "var(--mj-gold)" }} />
                   ))}
                 </div>
-                <span className="text-xs text-white/50">
-                  {DEFAULT_PRODUCT.rating.toFixed(1)}
-                </span>
+                <span className="text-xs" style={{ color: "var(--mj-text-muted)" }}>Premium Quality</span>
               </div>
 
-              <div className="mt-5 flex items-center gap-3">
-                <span className="text-3xl font-semibold text-white">${product.productPrice?.toFixed(2) || product.productPrice}</span>
-                {product.compareAt && (
-                  <>
-                    <span className="text-sm text-white/35 line-through">${product.compareAt.toFixed(2)}</span>
-                    <span className="rounded-full bg-gradient-to-r from-amber-400 to-pink-500 px-2.5 py-1 text-[10px] font-bold text-white">
-                      -{discountPct}%
-                    </span>
-                  </>
+              {/* Price */}
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-3xl font-bold" style={{ color: "var(--mj-charcoal)" }}>
+                  Rs. {Number(displayPrice).toLocaleString("en-PK")}
+                </span>
+                {originalPrice && (
+                  <span className="text-lg line-through" style={{ color: "var(--mj-text-light)" }}>
+                    Rs. {Number(originalPrice).toLocaleString("en-PK")}
+                  </span>
                 )}
               </div>
 
-              <p className="mt-4 text-sm leading-relaxed text-white/50">{product.brand || "Artisan Collection"}</p>
+              {/* Divider */}
+              <div className="divider-gold mb-6" />
 
-              <div className="mt-7">
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-white/40">
-                  Color â€” <span className="text-white/60">{color}</span>
+              {/* Short description */}
+              {product.description && (
+                <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--mj-text-muted)" }}>
+                  {product.description.slice(0, 180)}{product.description.length > 180 ? "…" : ""}
                 </p>
-                <div className="flex gap-2.5">
-                  {DEFAULT_PRODUCT.colors.map((c) => (
-                    <button
-                      key={c.name}
-                      type="button"
-                      onClick={() => setColor(c.name)}
-                      className={
-                        "h-9 w-9 rounded-full bg-gradient-to-br p-0.5 transition-transform duration-150 " +
-                        c.swatch +
-                        " " +
-                        (color === c.name ? "ring-2 ring-white/70 ring-offset-2 ring-offset-indigo-900" : "hover:scale-105")
-                      }
-                      aria-label={c.name}
-                    />
-                  ))}
-                </div>
-              </div>
+              )}
 
-              <div className="mt-6">
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-white/40">Size</p>
-                <div className="flex flex-wrap gap-2">
-                  {DEFAULT_PRODUCT.sizes.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => setSize(s)}
-                      className={
-                        "rounded-xl border px-4 py-2 text-xs font-semibold transition-colors duration-150 " +
-                        (size === s
-                          ? "border-transparent bg-gradient-to-r from-amber-400 to-pink-500 text-white shadow-md shadow-pink-500/20"
-                          : "border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:text-white")
-                      }
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setQty((q) => Math.max(1, q - 1))}
-                    className="flex h-6 w-6 items-center justify-center text-white/60 transition-colors duration-150 hover:text-white"
-                  >
-                    <Minus className="h-3.5 w-3.5" />
+              {/* Qty + Add to Cart */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center rounded-lg overflow-hidden"
+                  style={{ border: "1px solid var(--mj-border)", background: "white" }}>
+                  <button type="button" onClick={() => setQty(q => Math.max(1, q - 1))}
+                    className="w-10 h-11 flex items-center justify-center transition-colors hover:bg-[var(--mj-cream)]"
+                    style={{ color: "var(--mj-warm-brown)" }}>
+                    <Minus className="w-3.5 h-3.5" />
                   </button>
-                  <span className="w-4 text-center text-sm font-semibold text-white">{qty}</span>
-                  <button
-                    type="button"
-                    onClick={() => setQty((q) => q + 1)}
-                    className="flex h-6 w-6 items-center justify-center text-white/60 transition-colors duration-150 hover:text-white"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
+                  <span className="w-10 text-center text-sm font-bold"
+                    style={{ color: "var(--mj-charcoal)" }}>{qty}</span>
+                  <button type="button" onClick={() => setQty(q => q + 1)}
+                    className="w-10 h-11 flex items-center justify-center transition-colors hover:bg-[var(--mj-cream)]"
+                    style={{ color: "var(--mj-warm-brown)" }}>
+                    <Plus className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                <motion.button
-                  type="button"
-                  onClick={handleAddToCart}
-                  whileHover={{ y: -1 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-pink-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-pink-500/20 hover:shadow-pink-500/40 sm:flex-initial sm:px-10"
-                >
+                <motion.button type="button" onClick={handleAddToCart}
+                  whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
+                  className="flex-1 h-11 btn-gold rounded-lg flex items-center justify-center gap-2 text-xs">
                   <AnimatePresence mode="wait" initial={false}>
                     {added ? (
-                      <motion.span
-                        key="added"
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
-                        className="flex items-center gap-2"
-                      >
-                        <Check className="h-4 w-4" />
-                        Added to cart
+                      <motion.span key="added" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="flex items-center gap-2">
+                        <Check className="w-4 h-4" /> Added to Cart
                       </motion.span>
                     ) : (
-                      <motion.span
-                        key="add"
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
-                        className="flex items-center gap-2"
-                      >
-                        <ShoppingBag className="h-4 w-4" />
-                        Add to cart
+                      <motion.span key="add" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="flex items-center gap-2">
+                        <ShoppingBag className="w-4 h-4" /> Add to Cart
                       </motion.span>
                     )}
                   </AnimatePresence>
                 </motion.button>
               </div>
 
-              <p className="mt-3 text-[11px] text-white/35">SKU: {product._id?.slice(-8) || "N/A"}</p>
+              {/* Buy Now */}
+              <Link to="/checkout" onClick={handleAddToCart}
+                className="w-full h-11 btn-outline rounded-lg flex items-center justify-center gap-2 text-xs mb-6">
+                Buy Now
+              </Link>
 
-              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-6">
+              {/* Trust features */}
+              <div className="grid grid-cols-2 gap-3">
                 {features.map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex items-center gap-2 text-xs text-white/50">
-                    <Icon className="h-4 w-4 text-white/40" />
-                    {label}
+                  <div key={label} className="flex items-center gap-2.5 p-3 rounded-lg"
+                    style={{ background: "var(--mj-cream)", border: "1px solid var(--mj-border)" }}>
+                    <Icon className="w-4 h-4 shrink-0" style={{ color: "var(--mj-gold)" }} />
+                    <span className="text-[11px] font-semibold" style={{ color: "var(--mj-warm-brown)" }}>
+                      {label}
+                    </span>
                   </div>
                 ))}
               </div>
+
+              {/* SKU */}
+              <p className="mt-4 text-[11px]" style={{ color: "var(--mj-text-light)" }}>
+                SKU: {product._id?.slice(-8).toUpperCase() || "N/A"}
+              </p>
             </motion.div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut", delay: 0.15 }}
-            className="mt-16 rounded-3xl border border-white/10 bg-white/[0.07] p-6 shadow-xl backdrop-blur-2xl sm:p-8"
-          >
-            <div className="flex gap-6 border-b border-white/10 pb-4">
+          {/* ── Tabs: Description / Highlights / Jewelry Care ── */}
+          <div className="mt-16 rounded-xl overflow-hidden" style={{ border: "1px solid var(--mj-border)" }}>
+            <div className="flex border-b" style={{ background: "var(--mj-cream)", borderColor: "var(--mj-border)" }}>
               {[
                 { id: "description", label: "Description" },
-                { id: "highlights", label: "Highlights" },
-              ].map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => setTab(t.id)}
-                  className={
-                    "relative text-sm font-semibold transition-colors duration-150 " +
-                    (tab === t.id ? "text-white" : "text-white/40 hover:text-white/70")
-                  }
-                >
+                { id: "highlights",  label: "Product Details" },
+                { id: "care",        label: "Jewelry Care" },
+              ].map(t => (
+                <button key={t.id} type="button" onClick={() => setTab(t.id)}
+                  className="relative px-6 py-4 text-xs font-bold uppercase tracking-wider transition-colors"
+                  style={{ color: tab === t.id ? "var(--mj-gold-dark)" : "var(--mj-text-muted)" }}>
                   {t.label}
                   {tab === t.id && (
-                    <motion.span
-                      layoutId="detailTabUnderline"
-                      className="absolute -bottom-4 left-0 h-0.5 w-full rounded-full bg-gradient-to-r from-amber-400 to-pink-500"
-                    />
+                    <motion.span layoutId="pdp-tab" className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
+                      style={{ background: "var(--mj-gold)" }} />
                   )}
                 </button>
               ))}
             </div>
-
-            <div className="mt-6">
+            <div className="p-8" style={{ background: "white" }}>
               <AnimatePresence mode="wait">
-                {tab === "description" ? (
-                  <motion.p
-                    key="description"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2 }}
-                    className="max-w-2xl text-sm leading-relaxed text-white/55"
-                  >
-                    {product.description || DEFAULT_PRODUCT.description}
+                {tab === "description" && (
+                  <motion.p key="desc" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}
+                    className="text-sm leading-relaxed max-w-2xl" style={{ color: "var(--mj-text-muted)" }}>
+                    {product.description || "A beautifully crafted piece of jewelry. No description provided."}
                   </motion.p>
-                ) : (
-                  <motion.ul
-                    key="highlights"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2 }}
-                    className="grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2"
-                  >
-                    {(product.highlights || DEFAULT_PRODUCT.highlights).map((h) => (
-                      <li key={h} className="flex items-start gap-2 text-sm text-white/55">
-                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-400" />
+                )}
+                {tab === "highlights" && (
+                  <motion.ul key="highlights" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl">
+                    {DEFAULT_HIGHLIGHTS.map(h => (
+                      <li key={h} className="flex items-start gap-2.5 text-sm"
+                        style={{ color: "var(--mj-text-muted)" }}>
+                        <span className="mt-1 w-1.5 h-1.5 rounded-full shrink-0"
+                          style={{ background: "var(--mj-gold)" }} />
                         {h}
                       </li>
                     ))}
                   </motion.ul>
                 )}
+                {tab === "care" && (
+                  <motion.div key="care" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}
+                    className="space-y-3 max-w-2xl">
+                    {[
+                      "Store in a cool, dry place away from direct sunlight.",
+                      "Remove before swimming, bathing, or exercising.",
+                      "Clean gently with a soft, lint-free cloth.",
+                      "Keep away from perfumes, lotions, and harsh chemicals.",
+                      "Store separately to prevent scratching.",
+                    ].map(c => (
+                      <p key={c} className="flex items-start gap-2.5 text-sm"
+                        style={{ color: "var(--mj-text-muted)" }}>
+                        <span className="mt-1 w-1.5 h-1.5 rounded-full shrink-0"
+                          style={{ background: "var(--mj-rose)" }} />
+                        {c}
+                      </p>
+                    ))}
+                  </motion.div>
+                )}
               </AnimatePresence>
             </div>
-          </motion.div>
-
-          <div className="mt-16">
-            <h2 className="text-xl font-semibold text-white" style={{ fontFamily: "Fraunces, serif" }}>
-              You might also like
-            </h2>
-            <div className="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-4">
-              {RELATED.map((p, i) => (
-                <RelatedCard key={p.id} product={p} index={i} />
-              ))}
-            </div>
           </div>
+
+          {/* ── Related Products ── */}
+          {related.length > 0 && (
+            <div className="mt-20">
+              <div className="text-center mb-10">
+                <p className="subheading mb-2">You May Also Like</p>
+                <h2 className="heading-display text-3xl">Related Pieces</h2>
+              </div>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {related.map((p, i) => (
+                  <ProductCard key={p._id} product={p} index={i} />
+                ))}
+              </div>
+            </div>
+          )}
+
         </div>
-      </section>
+      </div>
       <Footer />
     </>
   );

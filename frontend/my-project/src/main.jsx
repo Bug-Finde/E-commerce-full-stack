@@ -5,13 +5,20 @@ import App from "./App";
 import "./index.css";
 import AppProvider from "./context/Context";
 import { AuthProvider } from "./context/AuthContext";
+import { WishlistProvider } from "./context/WishlistContext";
+import { loadFonts } from "./utils/fonts";
+
+// Load brand fonts globally — runs once before first render
+loadFonts();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <AppProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <WishlistProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </WishlistProvider>
     </AppProvider>
   </AuthProvider>
 );

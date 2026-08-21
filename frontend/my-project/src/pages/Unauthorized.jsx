@@ -1,30 +1,29 @@
 import { Link } from "react-router-dom";
 import { ShieldX, ArrowLeft } from "lucide-react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export default function Unauthorized() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 via-violet-900 to-blue-900 px-6">
-      <div className="text-center">
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-pink-500/20">
-          <ShieldX className="h-10 w-10 text-pink-400" />
+    <>
+      <Navbar />
+      <div style={{ background: "var(--mj-ivory)", minHeight: "100vh" }}
+        className="flex flex-col items-center justify-center gap-5 py-20 text-center px-6">
+        <div className="w-20 h-20 rounded-full flex items-center justify-center"
+          style={{ background: "var(--mj-blush)" }}>
+          <ShieldX className="w-9 h-9" style={{ color: "var(--mj-rose)" }} />
         </div>
-        <h1
-          className="mt-6 text-3xl font-semibold text-white sm:text-4xl"
-          style={{ fontFamily: "Fraunces, serif" }}
-        >
-          Access Denied
-        </h1>
-        <p className="mt-3 text-sm text-white/50">
-          You don't have permission to access this page.
+        <h1 className="heading-display text-4xl sm:text-5xl">Access Denied</h1>
+        <p className="text-sm max-w-xs" style={{ color: "var(--mj-text-muted)" }}>
+          You don't have permission to view this page.
         </p>
-        <Link
-          to="/"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/20 hover:shadow-pink-500/40"
-        >
-          <ArrowLeft className="h-4 w-4" />
+        <Link to="/"
+          className="mt-2 flex items-center gap-2 px-8 py-3 btn-gold rounded-lg text-xs">
+          <ArrowLeft className="w-3.5 h-3.5" />
           Back to Home
         </Link>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
