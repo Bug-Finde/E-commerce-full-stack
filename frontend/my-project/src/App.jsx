@@ -1,5 +1,14 @@
-﻿import { Routes, Route } from "react-router-dom";
+﻿import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import "./App.css";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
+  return null;
+}
 import Signup from "./pages/auth/Signup";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
@@ -42,6 +51,7 @@ import Unauthorized from "./pages/Unauthorized";
 function App() {
   return (
     <>
+      <ScrollToTop />
       <Routes>
         {/* Public Routes */}
         <Route path="/signup" element={<Signup />} />
