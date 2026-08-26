@@ -31,7 +31,13 @@ const limiter = rateLimit({
   message: { success: false, message: "Too many requests" },
 });
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://merijewelry.netlify.app"
+  ],
+  credentials: true
+}));
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(compression());
 app.use(morgan("dev"));
