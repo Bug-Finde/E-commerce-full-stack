@@ -34,7 +34,8 @@ const limiter = rateLimit({
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://merijewelry.netlify.app"
+    "https://merijewelry.netlify.app",
+    "https://merijewelry.netlify.app/"
   ],
   credentials: true
 }));
