@@ -1,44 +1,61 @@
-const brevo = require("@getbrevo/brevo");
 
-const apiInstance = new brevo.TransactionalEmailsApi();
+const { BrevoClient } = require("@getbrevo/brevo");
 
-apiInstance.authentications.apiKey.apiKey =
-  process.env.BREVO_API_KEY;
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+  timeoutInSeconds: 30,
+  maxRetries: 2,
+});
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
-    console.log("📧 Sending email through Brevo API...");
-    console.log("EMAIL TO:", to);
+    console.log("=================================");
+    console.log("📧 BREVO API EMAIL");
+    console.log("To:", to);
+    console.log("From:", process.env.EMAIL_FROM);
+    console.log("=================================");
 
-    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    if (!process.env.BREVO_API_KEY) {
+      throw new Error("BREVO_API_KEY is not configured");
+    }
 
-    sendSmtpEmail.sender = {
-      name: process.env.EMAIL_FROM_NAME || "Meri Jewelry",
-      email: process.env.EMAIL_FROM,
-    };
+    if (!process.env.EMAIL_FROM) {
+      throw new Error("EMAIL_FROM is not configured");
+    }
 
-    sendSmtpEmail.to = [
-      {
-        email: to,
-      },
-    ];
+    const result =
+      await brevo.transactionalEmails.sendTransacEmail({
+        sender: {
+          name: process.env.EMAIL_FROM_NAME || "Meri Jewelry",
+          email: process.env.EMAIL_FROM,
+        },
 
-    sendSmtpEmail.subject = subject;
-    sendSmtpEmail.htmlContent = html;
+        to: [
+          {
+            email: to,
+          },
+        ],
 
-    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
+        subject,
+        htmlContent: html,
+      });
 
-    console.log("✅ Email sent successfully");
-    console.log("Brevo response:", result);
+    console.log("✅ Brevo email sent");
+    console.log("Message ID:", result?.messageId);
 
     return result;
   } catch (error) {
-    console.error("❌ BREVO EMAIL ERROR");
+    console.error("❌ BREVO API ERROR");
 
-    console.error(
-      "Message:",
-      error?.response?.body || error.message
-    );
+    console.error("Message:", error?.message);
+
+    if (error?.statusCode) {
+      console.error("Status Code:", error.statusCode);
+    }
+
+    if (error?.body) {
+      console.error("Response Body:", error.body);
+    }
 
     throw error;
   }
