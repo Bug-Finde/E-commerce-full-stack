@@ -23,6 +23,9 @@ const orderRoute = require("./routes/orderRoute");
 
 const app = express();
 
+// Render terminates TLS and forwards the client IP in this header.
+app.set("trust proxy", 1);
+
 connectDB();
 
 const limiter = rateLimit({
