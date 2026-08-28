@@ -1,48 +1,44 @@
-const dns = require("node:dns");
-const nodemailer = require("nodemailer");
+const brevo = require("@getbrevo/brevo");
 
-dns.setDefaultResultOrder("ipv4first");
+const apiInstance = new brevo.TransactionalEmailsApi();
 
-const smtpTransporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: false,
-  family: 4,
-
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-
-  connectionTimeout: 15000,
-  greetingTimeout: 15000,
-  socketTimeout: 20000,
-});
+apiInstance.authentications.apiKey.apiKey =
+  process.env.BREVO_API_KEY;
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
-    console.log("📧 Sending email...");
-    console.log("SMTP HOST:", process.env.SMTP_HOST);
-    console.log("SMTP PORT:", process.env.SMTP_PORT);
-    console.log("SMTP USER:", process.env.SMTP_USER);
+    console.log("📧 Sending email through Brevo API...");
     console.log("EMAIL TO:", to);
 
-    const info = await smtpTransporter.sendMail({
-      from: `"Meri Jewelry" <${process.env.EMAIL_FROM}>`,
-      to,
-      subject,
-      html,
-    });
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.sender = {
+      name: process.env.EMAIL_FROM_NAME || "Meri Jewelry",
+      email: process.env.EMAIL_FROM,
+    };
+
+    sendSmtpEmail.to = [
+      {
+        email: to,
+      },
+    ];
+
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.htmlContent = html;
+
+    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
     console.log("✅ Email sent successfully");
-    console.log("Message ID:", info.messageId);
+    console.log("Brevo response:", result);
 
-    return info;
+    return result;
   } catch (error) {
-    console.error("❌ EMAIL ERROR");
-    console.error("Message:", error.message);
-    console.error("Code:", error.code);
-    console.error("Command:", error.command);
+    console.error("❌ BREVO EMAIL ERROR");
+
+    console.error(
+      "Message:",
+      error?.response?.body || error.message
+    );
 
     throw error;
   }

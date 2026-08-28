@@ -20,12 +20,10 @@ const sanitizeUser = (user) => {
   return obj;
 };
 
-const register = async (req, res) => {
 
+const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
-
-    console.log("Registering user with email:", email);
 
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({
@@ -41,7 +39,11 @@ const register = async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const existingUser = await User.findOne({
+      email: normalizedEmail,
+    });
 
     if (existingUser) {
       return res.status(400).json({
@@ -51,44 +53,80 @@ const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Hashed password:", hashedPassword);
 
     const newUser = await User.create({
-      firstName,
-      lastName,
-      email: email.toLowerCase(),
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: normalizedEmail,
       password: hashedPassword,
+      isVerified: false,
+      isLoggedIn: false,
     });
 
     const token = createToken(newUser);
-    console.log('newUser:', newUser);
-    console.log("Generated token for new user:", token);
 
     newUser.token = token;
     await newUser.save();
 
-    await verifyEmail(newUser.email, token);
+    let emailSent = false;
 
-    await logActivity({
-      userId: newUser._id,
-      action: "user_registered",
-      entityType: "user",
-      entityId: newUser._id,
-      description: `${newUser.firstName} ${newUser.lastName} registered`,
-    });
+    try {
+      await verifyEmail(newUser.email, token);
+      emailSent = true;
+    } catch (emailError) {
+      console.error(
+        "Verification email failed:",
+        emailError.message
+      );
+    }
+
+    try {
+      await logActivity({
+        userId: newUser._id,
+        action: "user_registered",
+        entityType: "user",
+        entityId: newUser._id,
+        description: `${newUser.firstName} ${newUser.lastName} registered`,
+      });
+    } catch (activityError) {
+      console.error(
+        "Activity log failed:",
+        activityError.message
+      );
+    }
+
+    const userData = newUser.toObject();
+
+    delete userData.password;
+    delete userData.token;
+    delete userData.otp;
+    delete userData.otpExpires;
 
     return res.status(201).json({
       success: true,
-      message: "User registered successfully. Please verify your email.",
-      data: { ...sanitizeUser(newUser), token },
+      message: emailSent
+        ? "User registered successfully. Please verify your email."
+        : "User registered successfully, but verification email could not be sent. Please request a new verification email.",
+      emailSent,
+      data: userData,
     });
   } catch (error) {
+    console.error("REGISTER ERROR:", error);
+
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
     return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
+
 
 const verifyUser = async (req, res) => {
   try {

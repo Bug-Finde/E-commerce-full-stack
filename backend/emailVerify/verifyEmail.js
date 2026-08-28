@@ -1,27 +1,42 @@
 const { sendEmail } = require("./mailer");
 
- const verifyEmail = async (email, token) => {
+const verifyEmail = async (email, token) => {
   try {
- const verificationLink = `${process.env.FRONTEND_URL}/verify-email/${token}`;
-console.log("Verification Link:", verificationLink);
-console.log("Sending verification email to:", email);
+    const verificationLink =
+      `${process.env.FRONTEND_URL}/verify-email/${token}`;
+
+    console.log("Verification Link:", verificationLink);
+    console.log("Sending verification email to:", email);
+
     await sendEmail({
       to: email,
-      subject: "Verify Your Email",
+      subject: "Verify Your Email - Meri Jewelry",
       html: `
-        <h2>Email Verification</h2>
+        <div style="font-family: Arial, sans-serif;">
+          <h2>Welcome to Meri Jewelry</h2>
 
-        <p>Please click the link below to verify your email:</p>
+          <p>Please click the button below to verify your email:</p>
 
-        <a href="${verificationLink}">
-          Verify Email
-        </a>
+          <a
+            href="${verificationLink}"
+            style="
+              display:inline-block;
+              padding:12px 20px;
+              background:#000;
+              color:#fff;
+              text-decoration:none;
+              border-radius:6px;
+            "
+          >
+            Verify Email
+          </a>
 
-        <br /><br />
+          <p style="margin-top:20px;">
+            Or copy and paste this URL:
+          </p>
 
-        <p>Or copy and paste this URL into your browser:</p>
-
-        <p>${verificationLink}</p>
+          <p>${verificationLink}</p>
+        </div>
       `,
     });
 
@@ -32,5 +47,6 @@ console.log("Sending verification email to:", email);
   }
 };
 
-
-module.exports={verifyEmail}
+module.exports = {
+  verifyEmail,
+};
