@@ -57,9 +57,11 @@ const register = async (req, res) => {
     });
 
     const token = createToken(newUser);
-    await verifyEmail(newUser.email, token);
+
     newUser.token = token;
     await newUser.save();
+
+    await verifyEmail(newUser.email, token);
 
     await logActivity({
       userId: newUser._id,
