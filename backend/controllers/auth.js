@@ -21,8 +21,11 @@ const sanitizeUser = (user) => {
 };
 
 const register = async (req, res) => {
+
   try {
     const { firstName, lastName, email, password } = req.body;
+
+    console.log("Registering user with email:", email);
 
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({
