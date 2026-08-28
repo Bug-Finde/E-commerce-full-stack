@@ -3,7 +3,8 @@ const { sendEmail } = require("./mailer");
  const verifyEmail = async (email, token) => {
   try {
  const verificationLink = `${process.env.FRONTEND_URL}/verify-email/${token}`;
-
+console.log("Verification Link:", verificationLink);
+console.log("Sending verification email to:", email);
     await sendEmail({
       to: email,
       subject: "Verify Your Email",
