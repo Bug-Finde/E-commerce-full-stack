@@ -24,7 +24,7 @@ function Field({ label, icon: Icon, error, children, extra }) {
         {extra}
       </div>
       <div className="relative flex items-center">
-        <Icon className="pointer-events-none absolute left-3.5 h-4 w-4"
+        <Icon className="pointer-events-none absolute left-3.5 h-4 w-4 z-10"
           style={{ color: "var(--mj-text-muted)" }} />
         {children}
       </div>

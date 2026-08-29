@@ -64,14 +64,15 @@ function SidebarContent({ onClose }) {
         style={{ borderBottom: "1px solid var(--mj-border)" }}>
         <div className="flex items-center gap-3">
           <img src="/meri-jewelry-logo.svg" alt="Meri Jewelry"
-            className="h-9 w-auto object-contain"
+            className="h-11 w-11 object-contain"
+            style={{ filter: "drop-shadow(0 1px 4px rgba(168,86,90,0.15))" }}
             onError={e => { e.target.style.display = "none"; }} />
           <div>
-            <p className="text-sm font-semibold" style={{ fontFamily: "var(--font-display)", color: "var(--mj-charcoal)" }}>
-              Meri Jewelry
+            <p className="text-sm font-semibold italic" style={{ fontFamily: "var(--font-display)", color: "var(--mj-rose-dark)", lineHeight: 1 }}>
+              Meri
             </p>
-            <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--mj-gold)" }}>
-              Admin
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--mj-gold-dark)", letterSpacing: "0.18em" }}>
+              Jewelry · Admin
             </p>
           </div>
         </div>

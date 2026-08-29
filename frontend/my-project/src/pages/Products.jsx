@@ -101,19 +101,18 @@ export default function Products() {
           <div className="flex flex-col sm:flex-row gap-3 mb-6">
             {/* Search */}
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none z-10"
                 style={{ color: "var(--mj-text-light)" }} />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => { setQuery(e.target.value); setPage(1); }}
                 placeholder="Search jewelry..."
-                className="w-full pl-10 pr-10 py-3 text-sm rounded-lg"
-                style={{ background: "white", border: "1px solid var(--mj-border)", color: "var(--mj-charcoal)", outline: "none" }}
+                className="input-mj with-icon"
               />
               {query && (
                 <button type="button" onClick={() => setQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10"
                   style={{ color: "var(--mj-text-light)" }}>
                   <X className="w-4 h-4" />
                 </button>

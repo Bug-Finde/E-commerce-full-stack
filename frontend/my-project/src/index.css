@@ -255,9 +255,11 @@
     color: var(--mj-charcoal);
     font-family: var(--font-body);
     font-size: 0.875rem;
-    padding: 0.75rem 1rem;
+    /* Default: no icon. Use .input-icon to add left padding for icon. */
+    padding: 0.72rem 1rem;
     border-radius: 0.5rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    display: block;
   }
   .input-mj::placeholder {
     color: var(--mj-text-light);
@@ -265,10 +267,30 @@
   .input-mj:focus {
     border-color: var(--mj-gold);
     box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.14);
+    outline: none;
   }
   .input-mj.error {
     border-color: var(--mj-rose);
     box-shadow: 0 0 0 3px rgba(200, 135, 138, 0.14);
+  }
+  /* Icon variant: push text right to clear the absolute icon */
+  .input-mj.with-icon,
+  .input-icon {
+    padding-left: 2.6rem !important;
+  }
+  /* Textarea variant */
+  textarea.input-mj {
+    resize: vertical;
+    min-height: 7rem;
+  }
+  /* Select variant */
+  select.input-mj {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A8927E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    padding-right: 2.2rem;
   }
 
   /* ─ Headings ─ */

@@ -46,7 +46,7 @@ function Field({ label, icon: Icon, error, children }) {
       </label>
       <div className="relative flex items-center">
         <Icon
-          className="pointer-events-none absolute left-3.5 h-4 w-4"
+          className="pointer-events-none absolute left-3.5 h-4 w-4 z-10"
           style={{ color: "var(--mj-text-muted)" }}
         />
         {children}
@@ -153,14 +153,17 @@ export default function ForgotPassword() {
           <img
             src="/meri-jewelry-logo.svg"
             alt="Meri Jewelry"
-            className="h-10 w-auto object-contain"
+            className="h-12 w-12 object-contain"
+            style={{ filter: "drop-shadow(0 2px 6px rgba(168,86,90,0.15))" }}
             onError={(e) => { e.target.style.display = "none"; }}
           />
-          <span
-            className="text-lg font-semibold tracking-wide"
-            style={{ fontFamily: "var(--font-display)", color: "var(--mj-charcoal)" }}
-          >
-            Meri Jewelry
+          <span style={{ fontFamily: "var(--font-display)" }}>
+            <span className="block text-xl font-semibold italic leading-none" style={{ color: "var(--mj-rose-dark)" }}>
+              Meri
+            </span>
+            <span className="block text-[0.58rem] font-bold tracking-[0.2em] uppercase" style={{ color: "var(--mj-gold-dark)" }}>
+              Jewelry
+            </span>
           </span>
         </div>
 

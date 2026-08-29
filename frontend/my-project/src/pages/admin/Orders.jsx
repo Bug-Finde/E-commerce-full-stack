@@ -293,11 +293,11 @@ export default function AdminOrders() {
 
       {/* Search */}
       <div className="relative max-w-sm">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none z-10"
           style={{ color: "var(--mj-text-light)" }} />
         <input type="text" placeholder="Search order ID, customer, city…"
           value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
-          className="input-mj pl-10" />
+          className="input-mj with-icon" />
       </div>
 
       {/* Table */}

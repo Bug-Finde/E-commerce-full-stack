@@ -196,10 +196,10 @@ export default function ProfilePage() {
                         <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5"
                           style={{ color: "var(--mj-text-muted)" }}>{label}</label>
                         <div className="relative">
-                          <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                          <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none z-10"
                             style={{ color: "var(--mj-text-light)" }} />
                           <input type={type} value={form[key]} onChange={update(key)} placeholder={ph}
-                            className={`input-mj pl-10 ${errors[key] ? "error" : ""}`} />
+                            className={`input-mj with-icon ${errors[key] ? "error" : ""}`} />
                         </div>
                         {errors[key] && <p className="mt-1 text-xs" style={{ color: "var(--mj-rose)" }}>{errors[key]}</p>}
                       </div>
@@ -210,10 +210,10 @@ export default function ProfilePage() {
                     <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5"
                       style={{ color: "var(--mj-text-muted)" }}>Address</label>
                     <div className="relative">
-                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none z-10"
                         style={{ color: "var(--mj-text-light)" }} />
                       <input type="text" value={form.address} onChange={update("address")}
-                        placeholder="House 12, Street 4, Gulberg" className="input-mj pl-10" />
+                        placeholder="House 12, Street 4, Gulberg" className="input-mj with-icon" />
                     </div>
                   </div>
 
@@ -226,10 +226,10 @@ export default function ProfilePage() {
                         <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5"
                           style={{ color: "var(--mj-text-muted)" }}>{label}</label>
                         <div className="relative">
-                          <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                          <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none z-10"
                             style={{ color: "var(--mj-text-light)" }} />
                           <input type="text" value={form[key]} onChange={update(key)}
-                            placeholder={ph} className="input-mj pl-10" />
+                            placeholder={ph} className="input-mj with-icon" />
                         </div>
                       </div>
                     ))}

@@ -52,9 +52,7 @@ export default function AdminProducts() {
       setTotalPages(res.data.totalPages || 1);
     } catch { toast.error("Failed to load products"); }
     finally { setLoading(false); }
-  };
-
-  useEffect(() => { fetchProducts(); }, [page, search]);
+  };  useEffect(() => { fetchProducts(); }, [page, search]);
 
   const openCreate = () => {
     setEditProduct(null);
@@ -108,12 +106,6 @@ export default function AdminProducts() {
     } catch (err) { toast.error(err.response?.data?.message || "Delete failed"); }
   };
 
-  const inputStyle = {
-    width: "100%", padding: "0.625rem 1rem", borderRadius: "0.5rem",
-    border: "1px solid var(--mj-border)", background: "var(--mj-cream)",
-    color: "var(--mj-charcoal)", fontSize: "0.875rem", outline: "none",
-  };
-
   return (
     <div className="space-y-6">
 
@@ -130,11 +122,11 @@ export default function AdminProducts() {
 
       {/* Search */}
       <div className="relative max-w-sm">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none"
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none z-10"
           style={{ color: "var(--mj-text-light)" }} />
         <input type="text" placeholder="Search products..." value={search}
           onChange={e => { setSearch(e.target.value); setPage(1); }}
-          className="input-mj pl-10" />
+          className="input-mj with-icon" />
       </div>
 
       {/* Table */}
@@ -278,20 +270,20 @@ export default function AdminProducts() {
 
               <input type="text" placeholder="Product Name" value={form.productName}
                 onChange={e => setForm({ ...form, productName: e.target.value })}
-                style={inputStyle} />
+                className="input-mj" />
               <input type="number" placeholder="Price (Rs.)" value={form.productPrice}
                 onChange={e => setForm({ ...form, productPrice: e.target.value })}
-                style={inputStyle} />
+                className="input-mj" />
               <textarea placeholder="Description" value={form.description} rows={3}
                 onChange={e => setForm({ ...form, description: e.target.value })}
-                style={{ ...inputStyle, resize: "none" }} />
+                className="input-mj" style={{ resize: "none" }} />
               <div className="grid grid-cols-2 gap-3">
                 <input type="text" placeholder="Brand" value={form.brand}
                   onChange={e => setForm({ ...form, brand: e.target.value })}
-                  style={inputStyle} />
+                  className="input-mj" />
                 <select value={form.category}
                   onChange={e => setForm({ ...form, category: e.target.value })}
-                  style={inputStyle}>
+                  className="input-mj">
                   <option value="">Select Category</option>
                   {JEWELRY_CATEGORIES.map(c => (
                     <option key={c} value={c}>{c}</option>

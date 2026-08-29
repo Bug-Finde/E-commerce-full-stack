@@ -27,17 +27,6 @@ export default function AdminSettings() {
     }
   };
 
-  const inputStyle = {
-    padding: "0.625rem 1rem 0.625rem 2.5rem",
-    borderRadius: "0.5rem",
-    border: "1px solid var(--mj-border)",
-    background: "var(--mj-cream)",
-    color: "var(--mj-charcoal)",
-    fontSize: "0.875rem",
-    outline: "none",
-    width: "100%",
-  };
-
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
@@ -49,20 +38,27 @@ export default function AdminSettings() {
       <div className="rounded-xl bg-white p-6" style={{ border: "1px solid var(--mj-border)" }}>
         <p className="subheading mb-5">Account Information</p>
         <div className="space-y-4">
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { label: "First Name", key: "firstName", ph: "Sara" },
-              { label: "Last Name",  key: "lastName",  ph: "Khan" },
-            ].map(({ label, key, ph }) => (
+              { label: "First Name", key: "firstName", ph: "Sara",  icon: User },
+              { label: "Last Name",  key: "lastName",  ph: "Khan",  icon: User },
+            ].map(({ label, key, ph, icon: Icon }) => (
               <div key={key}>
                 <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5"
-                  style={{ color: "var(--mj-text-muted)" }}>{label}</label>
+                  style={{ color: "var(--mj-text-muted)" }}>
+                  {label}
+                </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none"
+                  <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none z-10"
                     style={{ color: "var(--mj-text-light)" }} />
-                  <input type="text" value={form[key]} placeholder={ph}
+                  <input
+                    type="text"
+                    value={form[key]}
+                    placeholder={ph}
                     onChange={e => setForm({ ...form, [key]: e.target.value })}
-                    style={inputStyle} />
+                    className="input-mj with-icon"
+                  />
                 </div>
               </div>
             ))}
@@ -70,20 +66,30 @@ export default function AdminSettings() {
 
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5"
-              style={{ color: "var(--mj-text-muted)" }}>Email</label>
+              style={{ color: "var(--mj-text-muted)" }}>
+              Email
+            </label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none"
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none z-10"
                 style={{ color: "var(--mj-text-light)" }} />
-              <input type="email" value={form.email} placeholder="admin@merijewelry.com"
+              <input
+                type="email"
+                value={form.email}
+                placeholder="admin@merijewelry.com"
                 onChange={e => setForm({ ...form, email: e.target.value })}
-                style={inputStyle} />
+                className="input-mj with-icon"
+              />
             </div>
           </div>
         </div>
 
-        <motion.button onClick={handleSave} disabled={saving}
-          whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
-          className="mt-5 flex items-center gap-2 px-6 py-3 btn-gold rounded-lg text-xs font-bold disabled:opacity-60">
+        <motion.button
+          onClick={handleSave}
+          disabled={saving}
+          whileHover={{ y: -1 }}
+          whileTap={{ scale: 0.98 }}
+          className="mt-6 flex items-center gap-2 px-6 py-3 btn-gold rounded-lg text-xs font-bold disabled:opacity-60"
+        >
           <Save className="h-4 w-4" />
           {saving ? "Saving…" : "Save Changes"}
         </motion.button>
@@ -115,17 +121,26 @@ export default function AdminSettings() {
       {/* System info */}
       <div className="rounded-xl bg-white p-6" style={{ border: "1px solid var(--mj-border)" }}>
         <p className="subheading mb-5">System Information</p>
-        <div className="space-y-3">
+        <div className="space-y-0">
           {[
-            { label: "User ID",        value: user?._id, mono: true },
-            { label: "Account Created",value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-PK", { day:"numeric", month:"long", year:"numeric" }) : "N/A" },
-            { label: "Email Verified", value: user?.isVerified ? "Verified ✓" : "Not Verified", color: user?.isVerified ? "#059669" : "var(--mj-rose)" },
+            { label: "User ID",         value: user?._id, mono: true },
+            { label: "Account Created", value: user?.createdAt
+                ? new Date(user.createdAt).toLocaleDateString("en-PK", { day: "numeric", month: "long", year: "numeric" })
+                : "N/A" },
+            { label: "Email Verified",  value: user?.isVerified ? "Verified ✓" : "Not Verified",
+              color: user?.isVerified ? "#059669" : "var(--mj-rose)" },
           ].map(({ label, value, mono, color }) => (
-            <div key={label} className="flex items-center justify-between py-2.5"
+            <div key={label}
+              className="flex items-center justify-between py-3"
               style={{ borderBottom: "1px solid var(--mj-border-light)" }}>
-              <span className="text-xs font-semibold" style={{ color: "var(--mj-text-muted)" }}>{label}</span>
-              <span className={`text-xs font-medium ${mono ? "font-mono" : ""}`}
-                style={{ color: color || "var(--mj-charcoal)" }}>
+              <span className="text-xs font-semibold" style={{ color: "var(--mj-text-muted)" }}>
+                {label}
+              </span>
+              <span
+                className={`text-xs font-medium ${mono ? "font-mono" : ""} max-w-[60%] truncate text-right`}
+                style={{ color: color || "var(--mj-charcoal)" }}
+                title={typeof value === "string" ? value : undefined}
+              >
                 {value}
               </span>
             </div>

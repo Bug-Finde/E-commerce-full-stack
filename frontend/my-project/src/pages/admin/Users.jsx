@@ -65,10 +65,10 @@ export default function AdminUsers() {
       </div>
 
       <div className="relative max-w-sm">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none"
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none z-10"
           style={{ color: "var(--mj-text-light)" }} />
         <input type="text" placeholder="Search users…" value={search}
-          onChange={e => setSearch(e.target.value)} className="input-mj  px-6" />
+          onChange={e => setSearch(e.target.value)} className="input-mj with-icon" />
       </div>
 
       {loading ? (

@@ -22,9 +22,7 @@ export default function AdminCategories() {
       setCategories(res.data.data || []);
     } catch { toast.error("Failed to load categories"); }
     finally { setLoading(false); }
-  };
-
-  useEffect(() => { fetchCategories(); }, []);
+  };  useEffect(() => { fetchCategories(); }, []);
 
   const openCreate = () => {
     setEditCat(null); setForm({ name:"", description:"" });
@@ -71,12 +69,6 @@ export default function AdminCategories() {
       await axiosInstance.delete(`/category/${id}`);
       toast.success("Category deleted"); fetchCategories();
     } catch (err) { toast.error(err.response?.data?.message || "Delete failed"); }
-  };
-
-  const inputStyle = {
-    width: "100%", padding: "0.625rem 1rem", borderRadius: "0.5rem",
-    border: "1px solid var(--mj-border)", background: "var(--mj-cream)",
-    color: "var(--mj-charcoal)", fontSize: "0.875rem", outline: "none",
   };
 
   return (
@@ -204,10 +196,11 @@ export default function AdminCategories() {
                   </div>
                 </div>
                 <input type="text" placeholder="Category Name" value={form.name}
-                  onChange={e => setForm({ ...form, name: e.target.value })} style={inputStyle} />
+                  onChange={e => setForm({ ...form, name: e.target.value })}
+                  className="input-mj" />
                 <textarea placeholder="Description (optional)" value={form.description} rows={3}
                   onChange={e => setForm({ ...form, description: e.target.value })}
-                  style={{ ...inputStyle, resize: "none" }} />
+                  className="input-mj" style={{ resize: "none" }} />
               </div>
               <button onClick={handleSave} disabled={saving}
                 className="mt-5 w-full py-3 btn-gold rounded-lg text-xs font-bold disabled:opacity-60">
