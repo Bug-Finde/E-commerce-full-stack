@@ -61,10 +61,10 @@ export default function About() {
               style={{ background: "linear-gradient(145deg, var(--mj-ivory) 0%, var(--mj-blush) 70%, #F0C8BC 100%)", border: "1px solid var(--mj-blush-dark)" }}
             >
               <img
-                src="/meri-jewelry-logo.svg"
+                src="/meri-jewelry-logo.png"
                 alt="Meri Jewelry"
                 className="w-3/4 h-3/4 object-contain"
-                style={{ filter: "drop-shadow(0 4px 20px rgba(168,86,90,0.2))" }}
+                style={{ borderRadius: "50%", filter: "drop-shadow(0 4px 20px rgba(168,86,90,0.2))" }}
                 onError={(e) => { e.target.style.display = "none"; }}
               />
               <p

@@ -383,10 +383,10 @@ export default function Home() {
                   style={{ border: "1px solid var(--mj-gold)" }}
                 />
                 <img
-                  src="/meri-jewelry-logo.svg"
+                  src="/meri-jewelry-logo.png"
                   alt="Meri Jewelry"
                   className="relative z-10 w-4/5 h-4/5 object-contain"
-                  style={{ filter: "drop-shadow(0 6px 24px rgba(168,86,90,0.2))" }}
+                  style={{ borderRadius: "50%", filter: "drop-shadow(0 6px 24px rgba(168,86,90,0.2))" }}
                   onError={e => { e.target.style.display = "none"; }}
                 />
                 {/* Bottom label */}

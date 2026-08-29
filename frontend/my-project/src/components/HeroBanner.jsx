@@ -123,10 +123,10 @@ export default function HeroBanner() {
                   />
 
                   <img
-                    src="/meri-jewelry-logo.svg"
+                    src="/meri-jewelry-logo.png"
                     alt="Meri Jewelry"
                     className="relative z-10 w-64 h-64 object-contain"
-                    style={{ filter: "drop-shadow(0 4px 16px rgba(168,86,90,0.18))" }}
+                    style={{ borderRadius: "50%", filter: "drop-shadow(0 4px 16px rgba(168,86,90,0.18))" }}
                     onError={(e) => { e.target.style.display = "none"; }}
                   />
 

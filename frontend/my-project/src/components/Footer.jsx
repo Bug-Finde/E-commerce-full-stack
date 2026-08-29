@@ -45,12 +45,11 @@ export default function Footer() {
           {/* Brand column */}
           <div>
             <Link to="/" className="flex items-center gap-3 mb-5" aria-label="Meri Jewelry">
-              {/* Logo shown with brightness invert so it appears white/gold on dark bg */}
               <img
-                src="/meri-jewelry-logo.svg"
+                src="/meri-jewelry-logo.png"
                 alt="Meri Jewelry"
                 className="h-14 w-14 object-contain"
-                style={{ filter: "brightness(0) invert(1) sepia(1) saturate(1.5) hue-rotate(350deg)", opacity: 0.85 }}
+                style={{ borderRadius: "50%", opacity: 0.92 }}
                 onError={(e) => { e.target.style.display = "none"; }}
               />
               <span style={{ fontFamily: "var(--font-display)" }}>
