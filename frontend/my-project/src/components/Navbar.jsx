@@ -125,20 +125,32 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2.5 shrink-0"
+            className="flex items-center gap-2 shrink-0"
             aria-label="Meri Jewelry - Home"
           >
             <img
               src="/meri-jewelry-logo.svg"
               alt="Meri Jewelry"
-              className="h-11 w-auto object-contain"
+              className="h-14 w-14 object-contain"
+              style={{ filter: "drop-shadow(0 1px 3px rgba(168,86,90,0.15))" }}
               onError={(e) => { e.target.style.display = "none"; }}
             />
             <span
-              className="hidden sm:block text-xl font-medium tracking-wide text-[var(--mj-charcoal)]"
-              style={{ fontFamily: "var(--font-display)", letterSpacing: "0.04em" }}
+              className="hidden sm:block leading-tight"
+              style={{ fontFamily: "var(--font-display)" }}
             >
-              Meri Jewelry
+              <span
+                className="block text-[1.35rem] font-semibold italic"
+                style={{ color: "var(--mj-rose-dark)", letterSpacing: "0.01em", lineHeight: 1 }}
+              >
+                Meri
+              </span>
+              <span
+                className="block text-[0.6rem] font-bold tracking-[0.22em] uppercase"
+                style={{ color: "var(--mj-gold-dark)", letterSpacing: "0.22em" }}
+              >
+                Jewelry
+              </span>
             </span>
           </Link>
 

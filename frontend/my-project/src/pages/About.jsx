@@ -57,15 +57,22 @@ export default function About() {
             </div>
 
             <div
-              className="aspect-square rounded-2xl flex items-center justify-center"
-              style={{ background: "var(--mj-blush)", border: "1px solid var(--mj-blush-dark)" }}
+              className="aspect-square rounded-2xl flex flex-col items-center justify-center gap-4"
+              style={{ background: "linear-gradient(145deg, var(--mj-ivory) 0%, var(--mj-blush) 70%, #F0C8BC 100%)", border: "1px solid var(--mj-blush-dark)" }}
             >
               <img
                 src="/meri-jewelry-logo.svg"
                 alt="Meri Jewelry"
-                className="w-56 h-56 object-contain"
+                className="w-3/4 h-3/4 object-contain"
+                style={{ filter: "drop-shadow(0 4px 20px rgba(168,86,90,0.2))" }}
                 onError={(e) => { e.target.style.display = "none"; }}
               />
+              <p
+                className="text-sm font-semibold tracking-widest uppercase"
+                style={{ color: "var(--mj-gold-dark)", letterSpacing: "0.18em" }}
+              >
+                Est. 2024 · Lahore
+              </p>
             </div>
           </div>
 

@@ -44,20 +44,30 @@ export default function Footer() {
 
           {/* Brand column */}
           <div>
-            <Link to="/" className="flex items-center gap-2.5 mb-4" aria-label="Meri Jewelry">
+            <Link to="/" className="flex items-center gap-3 mb-5" aria-label="Meri Jewelry">
+              {/* Logo shown with brightness invert so it appears white/gold on dark bg */}
               <img
                 src="/meri-jewelry-logo.svg"
                 alt="Meri Jewelry"
-                className="h-12 w-auto object-contain brightness-0 invert"
+                className="h-14 w-14 object-contain"
+                style={{ filter: "brightness(0) invert(1) sepia(1) saturate(1.5) hue-rotate(350deg)", opacity: 0.85 }}
                 onError={(e) => { e.target.style.display = "none"; }}
               />
+              <span style={{ fontFamily: "var(--font-display)" }}>
+                <span
+                  className="block text-2xl font-semibold italic leading-none"
+                  style={{ color: "var(--mj-gold-light)" }}
+                >
+                  Meri
+                </span>
+                <span
+                  className="block text-[0.6rem] font-bold tracking-[0.22em] uppercase"
+                  style={{ color: "rgba(228,201,138,0.7)" }}
+                >
+                  Jewelry
+                </span>
+              </span>
             </Link>
-            <p
-              className="text-2xl font-medium mb-3"
-              style={{ fontFamily: "var(--font-display)", color: "var(--mj-gold-light)" }}
-            >
-              Meri Jewelry
-            </p>
             <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.55)", maxWidth: "240px" }}>
               Premium handcrafted jewelry blending timeless elegance with South Asian tradition.
             </p>

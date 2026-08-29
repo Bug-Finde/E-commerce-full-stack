@@ -325,7 +325,7 @@ export default function Home() {
       </section>
 
       {/* ── Brand Story ── */}
-      <section className="py-20" style={{ background: "var(--mj-ivory)" }}>
+      <section className="py-24" style={{ background: "var(--mj-ivory)" }}>
         <div className="container-mj">
           <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
@@ -345,6 +345,18 @@ export default function Home() {
                   — from delicate everyday earrings to stunning bridal sets.
                 </p>
               </div>
+              {/* Value pills */}
+              <div className="flex flex-wrap gap-2 mb-8">
+                {["Handcrafted", "Premium Quality", "South Asian Heritage", "Cash on Delivery"].map((v) => (
+                  <span
+                    key={v}
+                    className="px-3.5 py-1.5 rounded-full text-[11px] font-semibold"
+                    style={{ background: "var(--mj-cream)", color: "var(--mj-warm-brown)", border: "1px solid var(--mj-border)" }}
+                  >
+                    {v}
+                  </span>
+                ))}
+              </div>
               <Link to="/about"
                 className="inline-flex items-center gap-2 px-7 py-3 btn-outline rounded-lg text-xs">
                 Our Story <ArrowRight className="w-3.5 h-3.5" />
@@ -354,11 +366,41 @@ export default function Home() {
             <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}
               className="flex justify-center">
-              <div className="aspect-square rounded-2xl overflow-hidden w-full max-w-sm flex items-center justify-center"
-                style={{ background: "var(--mj-blush)", border: "1px solid var(--mj-blush-dark)" }}>
-                <img src="/meri-jewelry-logo.svg" alt="Meri Jewelry"
-                  className="w-48 h-48 object-contain"
-                  onError={e => { e.target.style.display = "none"; }} />
+              <div
+                className="relative w-full max-w-sm aspect-square rounded-3xl flex flex-col items-center justify-center overflow-hidden"
+                style={{
+                  background: "linear-gradient(145deg, var(--mj-ivory) 0%, var(--mj-blush) 60%, #F0C8BC 100%)",
+                  border: "1px solid var(--mj-blush-dark)",
+                }}
+              >
+                {/* Subtle decorative rings */}
+                <div
+                  className="absolute inset-6 rounded-full opacity-20 pointer-events-none"
+                  style={{ border: "1px solid var(--mj-gold)" }}
+                />
+                <div
+                  className="absolute inset-12 rounded-full opacity-10 pointer-events-none"
+                  style={{ border: "1px solid var(--mj-gold)" }}
+                />
+                <img
+                  src="/meri-jewelry-logo.svg"
+                  alt="Meri Jewelry"
+                  className="relative z-10 w-4/5 h-4/5 object-contain"
+                  style={{ filter: "drop-shadow(0 6px 24px rgba(168,86,90,0.2))" }}
+                  onError={e => { e.target.style.display = "none"; }}
+                />
+                {/* Bottom label */}
+                <div
+                  className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full"
+                  style={{ background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)", border: "1px solid var(--mj-border)" }}
+                >
+                  <p
+                    className="text-[10px] font-bold uppercase tracking-[0.18em] whitespace-nowrap"
+                    style={{ color: "var(--mj-gold-dark)" }}
+                  >
+                    Est. 2024 · Lahore, Pakistan
+                  </p>
+                </div>
               </div>
             </motion.div>
           </div>

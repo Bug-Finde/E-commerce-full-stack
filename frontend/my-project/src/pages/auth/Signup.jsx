@@ -158,16 +158,17 @@ export default function Signup() {
         }}
       >
         {/* Logo + brand */}
-        <div className="mb-6 flex items-center gap-2.5">
+        <div className="mb-5 flex flex-col items-center gap-1">
           <img
             src="/meri-jewelry-logo.svg"
             alt="Meri Jewelry"
-            className="h-10 w-auto object-contain"
+            className="w-24 h-24 object-contain"
+            style={{ filter: "drop-shadow(0 2px 8px rgba(168,86,90,0.15))" }}
             onError={(e) => { e.target.style.display = "none"; }}
           />
           <span
-            className="text-lg font-semibold tracking-wide"
-            style={{ fontFamily: "var(--font-display)", color: "var(--mj-charcoal)" }}
+            className="text-lg font-semibold italic tracking-wide"
+            style={{ fontFamily: "var(--font-display)", color: "var(--mj-rose-dark)" }}
           >
             Meri Jewelry
           </span>
