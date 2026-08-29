@@ -126,7 +126,7 @@ export default function Navbar() {
           <Link
             to="/"
             className="flex items-center gap-2 shrink-0"
-            aria-label="Meri Jewelry - Home"
+            // aria-label="Meri Jewelry - Home"
           >
             <img
               src="/meri-jewelry-logo.svg"
