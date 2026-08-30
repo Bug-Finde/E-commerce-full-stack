@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* ── Hide Netlify badge ───────────────────────────────────────────────── */
+[data-netlify-deploy-id],
+.netlify-identity-widget,
+#netlify-identity-widget,
+a[href*="netlify.com"][target="_blank"],
+div[class*="netlify"],
+iframe[src*="netlify"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 /* ── Meri Jewelry Design System ───────────────────────────────────────── */
 @layer base {
   :root {

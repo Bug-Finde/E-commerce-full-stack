@@ -46,7 +46,7 @@ export default function Footer() {
           <div>
             <Link to="/" className="flex items-center gap-3 mb-5" aria-label="Meri Jewelry">
               <img
-                src="/meri-jewelry-logo.png"
+                src="/meri-jewelry.png"
                 alt="Meri Jewelry"
                 className="h-14 w-14 object-contain"
                 style={{ borderRadius: "50%", opacity: 0.92 }}
@@ -87,14 +87,14 @@ export default function Footer() {
                 style={{ color: "rgba(255,255,255,0.55)" }}
               >
                 <Mail className="w-4 h-4 shrink-0" style={{ color: "var(--mj-gold)" }} />
-                hello@merijewelry.com
+           info.merijewelery@gmail.com
               </a>
               <p
                 className="flex items-start gap-2.5 text-sm"
                 style={{ color: "rgba(255,255,255,0.55)" }}
               >
                 <MapPin className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "var(--mj-gold)" }} />
-                Lahore, Pakistan
+               Pakistan
               </p>
             </div>
 

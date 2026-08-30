@@ -95,11 +95,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled
           ? "bg-white shadow-sm border-b border-[var(--mj-border-light)]"
           : "bg-[var(--mj-ivory)] border-b border-[var(--mj-border-light)]"
-      }`}
+        }`}
     >
       {/* Announcement bar */}
       <div
@@ -131,9 +130,11 @@ export default function Navbar() {
             <img
               src="/meri-jewelry-logo.png"
               alt="Meri Jewelry"
-              className="h-14 w-14 object-contain"
+              className="h-10 w-10 object-contain"
               style={{ borderRadius: "50%" }}
-              onError={(e) => { e.target.style.display = "none"; }}
+              onError={(e) => {
+                e.target.style.display = "none";
+              }}
             />
             <span
               className="hidden sm:block leading-tight"
@@ -160,11 +161,10 @@ export default function Navbar() {
               <Link
                 key={to}
                 to={to}
-                className={`px-3.5 py-2 text-[12.5px] font-semibold tracking-wider uppercase transition-colors duration-150 ${
-                  isActive(to)
+                className={`px-3.5 py-2 text-[12.5px] font-semibold tracking-wider uppercase transition-colors duration-150 ${isActive(to)
                     ? "text-[var(--mj-gold-dark)]"
                     : "text-[var(--mj-warm-brown)] hover:text-[var(--mj-gold-dark)]"
-                }`}
+                  }`}
                 style={{ letterSpacing: "0.06em" }}
               >
                 {label}
@@ -175,11 +175,10 @@ export default function Navbar() {
             {isAdmin && (
               <Link
                 to="/admin"
-                className={`ml-1 flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-150 ${
-                  location.pathname.startsWith("/admin")
+                className={`ml-1 flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-150 ${location.pathname.startsWith("/admin")
                     ? "text-white"
                     : "hover:opacity-90"
-                }`}
+                  }`}
                 style={{
                   background: location.pathname.startsWith("/admin")
                     ? "var(--mj-charcoal)"
@@ -431,11 +430,10 @@ export default function Navbar() {
                   key={to}
                   to={to}
                   onClick={() => setMobileOpen(false)}
-                  className={`px-3 py-3 text-sm font-semibold tracking-wider uppercase rounded-lg transition-colors ${
-                    isActive(to)
+                  className={`px-3 py-3 text-sm font-semibold tracking-wider uppercase rounded-lg transition-colors ${isActive(to)
                       ? "bg-[var(--mj-cream)] text-[var(--mj-gold-dark)]"
                       : "text-[var(--mj-warm-brown)] hover:bg-[var(--mj-cream)]"
-                  }`}
+                    }`}
                   style={{ letterSpacing: "0.06em" }}
                 >
                   {label}
