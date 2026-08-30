@@ -443,7 +443,7 @@ export default function Home() {
             <p className="text-sm mb-8" style={{ color: "rgba(255,255,255,0.5)" }}>
               Tag us in your photos and be featured on our page.
             </p>
-            <a href="https://instagram.com/merijewelry" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.instagram.com/meri_jewelry_store/" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-3.5 btn-gold rounded-lg text-xs font-bold">
               <FaInstagram className="w-4 h-4" />
               Follow @merijewelry

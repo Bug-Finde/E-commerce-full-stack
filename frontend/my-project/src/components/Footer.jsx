@@ -101,7 +101,7 @@ export default function Footer() {
             {/* Social icons */}
             <div className="flex items-center gap-3">
               <a
-                href="https://instagram.com/merijewelry"
+                href="https://www.instagram.com/meri_jewelry_store/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-9 h-9 items-center justify-center rounded-full border transition-all hover:scale-105"
@@ -111,7 +111,7 @@ export default function Footer() {
                 <FaInstagram className="w-4 h-4" />
               </a>
               <a
-                href="https://facebook.com/merijewelry"
+                href="https://www.facebook.com/profile.php?id=100009250279783"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-9 h-9 items-center justify-center rounded-full border transition-all hover:scale-105"
