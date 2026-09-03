@@ -478,6 +478,54 @@ const changePasswordAuth = async (req, res) => {
   }
 };
 
+// ─── OAuth callback (Google & Facebook share the same handler) ────────────────
+const oauthCallback = async (req, res) => {
+  try {
+    const user = req.user; // set by passport strategy
+
+    if (!user) {
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?error=oauth_failed`
+      );
+    }
+
+    if (user.isBlocked) {
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?error=account_blocked`
+      );
+    }
+
+    const token = createToken(user);
+
+    user.token = token;
+    user.isLoggedIn = true;
+    await Session.deleteMany({ userId: user._id });
+    await Session.create({ userId: user._id });
+    await user.save();
+
+    await logActivity({
+      userId: user._id,
+      action: "user_login",
+      entityType: "auth",
+      entityId: user._id,
+      description: `${user.firstName} ${user.lastName} logged in via ${user.authProvider}`,
+    });
+
+    // Redirect to frontend with token + user data encoded in query params
+    const userData = sanitizeUser(user);
+    const encoded  = encodeURIComponent(JSON.stringify({ ...userData, token }));
+
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/auth/callback?data=${encoded}`
+    );
+  } catch (error) {
+    console.error("OAuth callback error:", error);
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/login?error=server_error`
+    );
+  }
+};
+
 module.exports = {
   register,
   verifyUser,
@@ -488,4 +536,5 @@ module.exports = {
   verifyOtp,
   changePassword,
   changePasswordAuth,
+  oauthCallback,
 };

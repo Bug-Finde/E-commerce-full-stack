@@ -79,6 +79,19 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    googleId: {
+      type: String,
+      default: null,
+    },
+    facebookId: {
+      type: String,
+      default: null,
+    },
+    authProvider: {
+      type: String,
+      enum: ["local", "google", "facebook"],
+      default: "local",
+    },
   },
   {
     timestamps: true,

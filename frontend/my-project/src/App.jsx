@@ -18,6 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 import VerifyEmail from "./pages/auth/VerifyEmail";
 import Verify from "./pages/auth/Verify";
 import VerifyOtp from "./pages/auth/VerifyOtp";
+import OAuthCallback from "./pages/auth/OAuthCallback";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Profile from "./pages/Profile";
@@ -60,6 +61,7 @@ function App() {
         <Route path="/verify" element={<Verify />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/auth/callback" element={<OAuthCallback />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/" element={<Home />} />

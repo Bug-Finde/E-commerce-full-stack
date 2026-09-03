@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
@@ -12,6 +12,9 @@ const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/db");
 const sanitizeInput = require("./middleware/sanitize");
 const errorHandler = require("./middleware/errorHandler");
+
+// Load passport BEFORE routes — registers "google" and "facebook" strategies
+const passport = require("./config/passport");
 
 const authRoute = require("./routes/authroute");
 const userRoute = require("./routes/userroute");
@@ -36,25 +39,19 @@ const limiter = rateLimit({
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://merijewlery.netlify.app"
+  "https://merijewlery.netlify.app",
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests without an Origin header
-    // such as Postman/server-to-server requests
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(compression());
 app.use(morgan("dev"));
@@ -63,6 +60,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 app.use(sanitizeInput);
+app.use(passport.initialize()); // must be after cookieParser, before routes
 
 // Serve uploaded files statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
