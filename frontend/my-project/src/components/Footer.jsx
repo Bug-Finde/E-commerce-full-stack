@@ -74,12 +74,12 @@ export default function Footer() {
             {/* Contact info */}
             <div className="space-y-2.5 mb-6">
               <a
-                href="https://wa.me/923001234567"
+                href="https://wa.me/923021587855"
                 className="flex items-center gap-2.5 text-sm transition-colors hover:text-[var(--mj-gold-light)]"
                 style={{ color: "rgba(255,255,255,0.55)" }}
               >
                 <FaWhatsapp className="w-4 h-4 shrink-0 text-green-400" />
-                +92 300 123 4567
+                0302 1587855
               </a>
               <a
                 href="mailto:hello@merijewelry.com"
@@ -111,7 +111,7 @@ export default function Footer() {
                 <FaInstagram className="w-4 h-4" />
               </a>
               <a
-                href="https://www.facebook.com/profile.php?id=100009250279783"
+                href="https://www.facebook.com/merijewellerypk/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-9 h-9 items-center justify-center rounded-full border transition-all hover:scale-105"
@@ -121,7 +121,7 @@ export default function Footer() {
                 <FaFacebookF className="w-4 h-4" />
               </a>
               <a
-                href="https://wa.me/923001234567"
+                href="https://wa.me/923021587855"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-9 h-9 items-center justify-center rounded-full border transition-all hover:scale-105"

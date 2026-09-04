@@ -1,8 +1,56 @@
 import React, { useState } from "react";
-import { MapPin, Phone, Mail } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import { MapPin, Mail } from "lucide-react";
+import { FaWhatsapp, FaFacebookF, FaInstagram } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+
+const contactItems = [
+  {
+    icon: FaWhatsapp,
+    label: "WhatsApp",
+    value: "0302 1587855",
+    href: "https://wa.me/923021587855",
+    color: "#22c55e",
+  },
+  {
+    icon: Mail,
+    label: "Email",
+    value: "info.merijewelery@gmail.com",
+    href: "mailto:info.merijewelery@gmail.com",
+    color: "var(--mj-gold)",
+  },
+  {
+    icon: MapPin,
+    label: "Location",
+    value: "Pakistan",
+    href: null,
+    color: "var(--mj-rose)",
+  },
+];
+
+const socialLinks = [
+  {
+    icon: FaFacebookF,
+    label: "Facebook",
+    handle: "@merijewellerypk",
+    href: "https://www.facebook.com/merijewellerypk/",
+    bg: "#1877F2",
+  },
+  {
+    icon: FaInstagram,
+    label: "Instagram",
+    handle: "@meri_jewelry_store",
+    href: "https://www.instagram.com/meri_jewelry_store/",
+    bg: "radial-gradient(circle at 30% 110%, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
+  },
+  {
+    icon: FaWhatsapp,
+    label: "WhatsApp Channel",
+    handle: "Join our Channel",
+    href: "https://whatsapp.com/channel/0029VbD3ygcAYlUNd8C0pp2M",
+    bg: "#22c55e",
+  },
+];
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -32,37 +80,14 @@ export default function Contact() {
 
         <div className="container-mj py-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-5xl mx-auto">
-            {/* Contact Info */}
+
+            {/* ── Left column: Contact info + social links ── */}
             <div>
-              <h2
-                className="heading-display text-3xl mb-8"
-              >
-                How to reach us
-              </h2>
-              <div className="space-y-6">
-                {[
-                  {
-                    icon: FaWhatsapp,
-                    label: "WhatsApp",
-                    value: "+92 300 123 4567",
-                    href: "https://wa.me/923001234567",
-                    color: "#22c55e",
-                  },
-                  {
-                    icon: Mail,
-                    label: "Email",
-                    value: "hello@merijewelry.com",
-                    href: "mailto:hello@merijewelry.com",
-                    color: "var(--mj-gold)",
-                  },
-                  {
-                    icon: MapPin,
-                    label: "Location",
-                    value: "Lahore, Pakistan",
-                    href: null,
-                    color: "var(--mj-rose)",
-                  },
-                ].map((item) => (
+              <h2 className="heading-display text-3xl mb-8">How to reach us</h2>
+
+              {/* Contact details */}
+              <div className="space-y-6 mb-10">
+                {contactItems.map((item) => (
                   <div key={item.label} className="flex items-start gap-4">
                     <div
                       className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
@@ -80,6 +105,8 @@ export default function Contact() {
                       {item.href ? (
                         <a
                           href={item.href}
+                          target={item.href.startsWith("http") ? "_blank" : undefined}
+                          rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                           className="text-sm font-medium hover:text-[var(--mj-gold-dark)] transition-colors"
                           style={{ color: "var(--mj-charcoal)" }}
                         >
@@ -94,9 +121,48 @@ export default function Contact() {
                   </div>
                 ))}
               </div>
+
+              {/* Social links */}
+              <h3
+                className="text-[11px] font-bold uppercase tracking-widest mb-4"
+                style={{ color: "var(--mj-gold)" }}
+              >
+                Follow Us
+              </h3>
+              <div className="flex flex-col gap-3">
+                {socialLinks.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 transition-all hover:scale-[1.02]"
+                    style={{
+                      background: "white",
+                      border: "1px solid var(--mj-border)",
+                      boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+                    }}
+                  >
+                    <div
+                      className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                      style={{ background: s.bg }}
+                    >
+                      <s.icon className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold" style={{ color: "var(--mj-charcoal)" }}>
+                        {s.label}
+                      </p>
+                      <p className="text-xs" style={{ color: "var(--mj-text-muted)" }}>
+                        {s.handle}
+                      </p>
+                    </div>
+                  </a>
+                ))}
+              </div>
             </div>
 
-            {/* Contact Form */}
+            {/* ── Right column: Contact form ── */}
             <div
               className="p-8 rounded-2xl"
               style={{ background: "white", border: "1px solid var(--mj-border)" }}
@@ -124,7 +190,10 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <h3 className="heading-display text-2xl mb-6">Send a Message</h3>
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "var(--mj-text-muted)" }}>
+                    <label
+                      className="block text-[11px] font-bold uppercase tracking-wider mb-1.5"
+                      style={{ color: "var(--mj-text-muted)" }}
+                    >
                       Your Name
                     </label>
                     <input
@@ -137,7 +206,10 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "var(--mj-text-muted)" }}>
+                    <label
+                      className="block text-[11px] font-bold uppercase tracking-wider mb-1.5"
+                      style={{ color: "var(--mj-text-muted)" }}
+                    >
                       Email Address
                     </label>
                     <input
@@ -150,7 +222,10 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "var(--mj-text-muted)" }}>
+                    <label
+                      className="block text-[11px] font-bold uppercase tracking-wider mb-1.5"
+                      style={{ color: "var(--mj-text-muted)" }}
+                    >
                       Message
                     </label>
                     <textarea
@@ -168,6 +243,7 @@ export default function Contact() {
                 </form>
               )}
             </div>
+
           </div>
         </div>
       </section>
